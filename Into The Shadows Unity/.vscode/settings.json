@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Into The Shadows.sln"
+    "dotnet.defaultSolution": "Into The Shadows Unity.sln"
 }

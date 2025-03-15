@@ -1,0 +1,4 @@
+Schedule and deliverable:
+Task1: Sunlight infection mechanic -- Sun by 11pm (estimate: 4 hrs)
+Cure image and mechanic -- Mon by 11pm (estimate: 4 hr)
+Final soft prototype(collab) -- Tue by 11pm (estimate: 2 hrs)

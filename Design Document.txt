@@ -1,0 +1,89 @@
+Version Control: 
+Github
+-https://github.com/Hqcao1/Into-The-Shadows 
+Bug Tracker: 
+Github Issues
+
+Game Title: Into The Shadows
+
+Team:
+Hieu Cao: Project Manager
+Alejandro Bravo: Programmer
+Atharv Kokate: Tech lead/Designer
+
+Game Idea:
+
+Players must find the cure developed by Scientists to a Zombie Apocalypse caused by harmful radiation found in Sunlight
+Players must stay in the shadows
+Avoid direct Sunlight (carries harmful radiation which can turn you into a zombie over time)
+Avoid / Kill Zombies 
+Fighting Zombies alert nearby Zombies (gunfire, zombie grunts, etc.)
+Find the cure before turning into a Zombie or Die Trying..
+
+Target audience:
+Survival Game lovers, Strategic Players
+
+
+FEs: 
+Players:
+2-4 survivors
+co-op( players vs game)
+
+2. Objective:
+Players must find the cure developed by Scientists to a Zombie Apocalypse caused by harmful radiation found in Sunlight
+3. Procedures:
+who: all present players (2-4)
+where: dystopian city ridden with zombies
+when: Find cure before you turn into a zombie or dying to Zombies
+How: avoid/kill zombies, Players can hide inside bulidings
+
+. Rules:
+Fully infected Players turn into zombies who chase and try to kill their teammates involuntarily
+
+5. Resources:
+Food
+Weapons and ammo
+Infection stabilizers
+
+6. Conflict:
+Walking in the Sunlight worsens your infection
+
+7. Boundaries:
+City Limits
+
+8. Outcome:
+Survive and cure your infection 
+
+
+Extras:
+
+Atharv’s scene:
+Blank plane
+Sunlight interaction
+cure
+
+Hieu’s scene:
+Buildings
+Level design to lead to the end tower
+
+Alejandro’s scene:
+Health and infection ui 
+Zombie script
+
+Things we need to implement:
+Zombie system/ai
+Different abilities.
+Zombies can move anywhere
+Zombies chase players based on proximity
+Resources
+UI for health/food/infection
+Food
+Weapons and ammo
+Limit or penalize to focus on survival not shooter
+Infection stabilizers
+Design level to place in riskier areas
+Sunlight interaction
+Urban dystopian buildings
+Infected system
+Level design to lead to the end tower
+Create intro or cutscenes to introduce the players to the game mechanics/story

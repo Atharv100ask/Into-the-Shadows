@@ -40,13 +40,6 @@ public class PlayerMovement : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Space))
             rb.AddForce(t.up * 250);
-        
-        // // https://docs.unity3d.com/ScriptReference/Input.html
-        // if (Input.GetButtonDown("Fire1")){
-        //     GameObject newBullet = GameObject.Instantiate(bullet, cannon.transform.position, cannon.transform.rotation) as GameObject;
-        //     newBullet.GetComponent<Rigidbody>().linearVelocity += Vector3.up * 2;
-        //     newBullet.GetComponent<Rigidbody>().AddForce(newBullet.transform.forward * 1500);
-        // }
 
     }
 }

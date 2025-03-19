@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI; // Needed for UI elements
 public class PlayerInfection : MonoBehaviour
 {
+    public HealthBar healthBar;
     public int infectionLevel = 0; // Current infection level
     public int maxInfection = 100; // Max infection level
     public TextMeshProUGUI gameOverText; // Use TextMeshProUGUI for TextMeshPro
@@ -12,6 +13,7 @@ public class PlayerInfection : MonoBehaviour
     {
         infectionLevel += amount;
         infectionLevel = Mathf.Clamp(infectionLevel, 0, maxInfection); // Prevent overflow
+        healthBar.UpdateInfectionBar(infectionLevel);
 
         if (infectionLevel >= maxInfection)
         {

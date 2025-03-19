@@ -16,7 +16,7 @@ public class HealthBar : MonoBehaviour
     {
         currentHealth = maxHealth;  // Initialize the health
         UpdateHealthBar();  //Update health bar to match the initial health
-        UpdateInfectionBar();  //start infection at 0
+        UpdateInfectionBar(0);  //start infection at 0
     }
 
     public void TakeDamage(float damage)//function that will decrease health when button is clicked
@@ -28,21 +28,21 @@ public class HealthBar : MonoBehaviour
 
     public void StartInfection()
     {
-        currentInfection += 10f;  //
-        currentInfection = Mathf.Clamp(currentInfection, 0f, maxInfection);  
+        // currentInfection += 10f;  //
+        // currentInfection = Mathf.Clamp(currentInfection, 0f, maxInfection);  
 
-        if (currentInfection >= maxInfection)
-        {
-            ApplyInfectionDamage();//applies infection damage
-        }
+        // if (currentInfection >= maxInfection)
+        // {
+        //     ApplyInfectionDamage();//applies infection damage
+        // }
 
-        UpdateInfectionBar();//updates infection bar filling
+        // UpdateInfectionBar(currentInfection);//updates infection bar filling
     }
 
     public void StopInfection()
     {
         currentInfection = 0f;
-        UpdateInfectionBar();//fixes filling to empty
+        UpdateInfectionBar((int)currentInfection);//fixes filling to empty
     }
 
     private void UpdateHealthBar()
@@ -52,10 +52,11 @@ public class HealthBar : MonoBehaviour
     }
 
     // Function to update the infection bar fill amount
-    private void UpdateInfectionBar()
+    public void UpdateInfectionBar(int infection)
     {
         // Set the fill amount based on current infection
-        infectionBarImage.fillAmount = currentInfection / maxInfection;
+        currentInfection = infection;
+        infectionBarImage.fillAmount =  infection / maxInfection;
     }
 
     private void ApplyInfectionDamage() //damage is inflicted when we have max infection rate

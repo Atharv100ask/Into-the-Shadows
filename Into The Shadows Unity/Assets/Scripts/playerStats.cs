@@ -10,7 +10,7 @@ public class HealthBar : MonoBehaviour
     
     // Infection variables
     public float maxInfection = 100f;  // Max infection amount
-    private float currentInfection = 0f; 
+    public static float currentInfection = 0f; 
 
     void Start()
     {

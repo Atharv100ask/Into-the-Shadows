@@ -90134,7 +90134,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DirectionalLight: {fileID: 410087040}
   Player: {fileID: 7784052398151096811}
-  playerInfection: {fileID: 0}
+  playerInfection: {fileID: 7784052398151096813}
   infectionInterval: 2
 --- !u!4 &1762178262
 Transform:
@@ -107556,7 +107556,7 @@ MonoBehaviour:
   - {fileID: 1370138016}
   - {fileID: 580497556}
   patrolSpeed: 2
-  player: {fileID: 1527946188}
+  player: {fileID: 7784052398151096811}
   attackRange: 10
   attackCooldown: 2
 --- !u!195 &1975265256
@@ -124485,3 +124485,5 @@ SceneRoots:
   - {fileID: 1989585100}
   - {fileID: 756834967}
   - {fileID: 1613056275}
+  - {fileID: 1788567271}
+  - {fileID: 1942179476}

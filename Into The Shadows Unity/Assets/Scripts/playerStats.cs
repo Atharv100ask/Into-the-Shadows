@@ -6,7 +6,7 @@ public class HealthBar : MonoBehaviour
     public Image healthBarImage; //health bar
     public Image infectionBarImage; //infection bar
     public float maxHealth = 100f;
-    private float currentHealth;
+    public float currentHealth;
     
     // Infection variables
     public float maxInfection = 100f;  // Max infection amount

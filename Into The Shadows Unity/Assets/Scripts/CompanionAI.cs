@@ -13,12 +13,13 @@ public class CompanionAI : MonoBehaviour
     // A* Pathfinding variables
     List<Node> currentPath = new List<Node>();
     int pathIndex = 0;
-    private Pathfinding pathfinder;
+    public Pathfinding pathfinder;
 
     void Start()
     {
         // Set up pathfinding system
-        pathfinder = FindObjectOfType<Pathfinding>();
+        pathfinder = FindAnyObjectByType<Pathfinding>();
+
 
         // You can customize which state you start in
         currentState = State.FollowPlayer; // Example: start by following the player

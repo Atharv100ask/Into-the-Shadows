@@ -1,4 +1,4 @@
-Design Document: https://docs.google.com/document/d/11-whKk_-YXsfpUOFhhTdsZ2soEV-NOZ_rrI_nBf3cGA/edit?usp=sharing\n
+Design Document: https://docs.google.com/document/d/11-whKk_-YXsfpUOFhhTdsZ2soEV-NOZ_rrI_nBf3cGA/edit?usp=sharing 
 Assignment - 6 
 Updated level design:
 Added pathway AI zombies with Mechanium body in our city to patrol around certain areas and once you get close they start to attack you.

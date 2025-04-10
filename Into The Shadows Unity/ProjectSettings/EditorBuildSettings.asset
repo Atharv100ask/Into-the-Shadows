@@ -5,9 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/Hieu's Scene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/SplashScene.unity
+    guid: 86ecfa9737c2d3145b282b5dbdeb4e4a
   - enabled: 1
     path: Assets/Scenes/Merge.unity
     guid: e7eb85e2df484664599d54098534fb7d

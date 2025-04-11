@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class PlayScreamSoundBehavior : StateMachineBehaviour
+public class Audio : StateMachineBehaviour
 {
-    public AudioClip screamClip; // Assign in the Animator
+    public AudioClip screamClip;
     private AudioSource audioSource;
     
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

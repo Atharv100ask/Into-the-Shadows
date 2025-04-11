@@ -48,6 +48,6 @@ public class Flicker : MonoBehaviour
 
     public void OnPlayButtonClicked()
     {
-        SceneManager.LoadScene("Merge");
+        SceneManager.LoadScene("SplashScene");
     }
 }

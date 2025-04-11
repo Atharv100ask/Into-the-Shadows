@@ -277,10 +277,10 @@ MonoBehaviour:
   - Welcome...
   - 'Game Created by: Alejandro Bravo, Hieu Cao, and Atharv Kokate'
   - Try to survive....AVOID THE SUNLIGHT
-  - Loot builidngs for guns and perks.
+  - Loot buildings for guns and perks.
   fadeTime: 0.5
   displayTime: 3
-  scene: SplashScene
+  nextSceneName: Merge
 --- !u!114 &224867034
 MonoBehaviour:
   m_ObjectHideFlags: 0

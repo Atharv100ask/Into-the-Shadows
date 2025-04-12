@@ -45,7 +45,7 @@ public class HealthBar : MonoBehaviour
         UpdateInfectionBar((int)currentInfection);//fixes filling to empty
     }
 
-    private void UpdateHealthBar()
+    public void UpdateHealthBar()
     {
         // Set the fill amount based on the current health
         healthBarImage.fillAmount = currentHealth / maxHealth;

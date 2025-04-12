@@ -10,6 +10,8 @@ public class TextController : MonoBehaviour
     public float fadeTime = 0.5f;   
     public float displayTime = 2f;  
     public string nextSceneName = "Merge";
+    public AudioSource audioSource;
+    public AudioClip startClip;
     void Start()
     {
         StartCoroutine(PlayTextSequence());
@@ -17,6 +19,10 @@ public class TextController : MonoBehaviour
 
     IEnumerator PlayTextSequence()
     {
+        if(audioSource != null){
+            audioSource.Play();
+        }
+        
         foreach (var line in lines)
         {
             storyText.text = line;

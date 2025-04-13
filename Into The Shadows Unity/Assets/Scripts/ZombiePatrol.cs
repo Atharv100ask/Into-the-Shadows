@@ -15,6 +15,8 @@ public class ZombiePatrol : MonoBehaviour
     private NavMeshAgent agent;
     private float attackTimer = 0f;
     private Animator anim;
+    
+    public HealthBar status;
 
     void Start()
     {
@@ -45,17 +47,19 @@ public class ZombiePatrol : MonoBehaviour
                 // Switch to attack mode: follow the player
                 anim.SetTrigger("Scream"); 
                 anim.SetTrigger("Run");
-                agent.SetDestination(player.position);
-
-                if (distanceToPlayer <= agent.stoppingDistance)
+                if (distanceToPlayer <= 2)
                 {
+                    anim.SetTrigger("handAttack");
+                    
                     if (attackTimer <= 0f)
                     {
                         Debug.Log("Zombie attacks the player!");
-                       //PLACE HERE TO TAKE DAMAGE LATER ON!!!!!!!!!!!!!!!!
+                        status.TakeDamage(10);
                         attackTimer = attackCooldown;
                     }
                 }
+                agent.SetDestination(player.position);
+
                 return; 
             }
         }        

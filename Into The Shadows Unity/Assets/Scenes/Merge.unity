@@ -62289,6 +62289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   missionText: {fileID: 977119798}
+  nextSceneName: CreditScene
 --- !u!64 &1235346017
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -110716,6 +110717,7 @@ MonoBehaviour:
   detectionRadius: 10
   status: {fileID: 1174584571}
   currentState: 0
+  tooltip: {fileID: 0}
 --- !u!4 &1933127689 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 62e29b9dbabfa8347a28e78d160ed844, type: 3}

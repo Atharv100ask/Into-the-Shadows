@@ -111213,6 +111213,7 @@ MonoBehaviour:
   player: {fileID: 7784052398151096811}
   attackRange: 10
   attackCooldown: 2
+  gameOverText: {fileID: 1099861374}
   status: {fileID: 1174584571}
 --- !u!195 &1975265256
 NavMeshAgent:

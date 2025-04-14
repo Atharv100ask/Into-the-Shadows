@@ -3,10 +3,8 @@ using UnityEngine.UI;
 
 public class ZombieHealthBar : MonoBehaviour
 {
-    [Header("UI Fill Image")]
     public Image fillImage;
 
-    [Header("Health Settings")]
     public float maxHealth = 100f;
     private float currentHealth;
 

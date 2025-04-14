@@ -20,6 +20,11 @@ public class ZombiePatrol : MonoBehaviour
     
     public HealthBar status;
 
+    public ZombieHealthBar zombieHealth; // Ref to the zombie's health component
+
+    private bool isDead = false;
+
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -34,6 +39,16 @@ public class ZombiePatrol : MonoBehaviour
 
     void Update()
     {
+        if (isDead) return;
+
+        // Check if zombie's health is 0 or below
+        if (zombieHealth.GetCurrentHealth() <= 0f)
+        {
+            Die();
+            
+            return;
+        }
+
         // Update the attack timer
         if (attackTimer > 0)
         {
@@ -83,7 +98,19 @@ public class ZombiePatrol : MonoBehaviour
         {
             gameOverText.enabled = true; // Enable the Game Over text
         }
-        // Optionally, pause the game or handle further logic here
         Time.timeScale = 0f; // Freeze time (game pause)
+    }
+    private void Die()
+    {
+        isDead = true;
+        agent.isStopped = true;
+        anim.SetTrigger("Death"); 
+        GetComponent<Collider>().enabled = false;//removes colider so u dont lose health
+        Invoke("DestroyAfterDeath", 5f);
+    }
+
+    private void DestroyAfterDeath()
+    {
+        Destroy(gameObject);
     }
 }

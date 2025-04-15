@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using TMPro; // Make sure you have this namespace for TextMeshPro
 
 public class ZombiePatrol : MonoBehaviour
 {
@@ -10,11 +11,19 @@ public class ZombiePatrol : MonoBehaviour
     public Transform player;        
     public float attackRange = 2f;    
     public float attackCooldown = 2f; 
+    public TextMeshProUGUI gameOverText; // Use TextMeshProUGUI for TextMeshPro
 
     private int currentWaypointIndex = 0;
     private NavMeshAgent agent;
     private float attackTimer = 0f;
     private Animator anim;
+    
+    public HealthBar status;
+
+    public ZombieHealthBar zombieHealth; // Ref to the zombie's health component
+
+    private bool isDead = false;
+
 
     void Start()
     {
@@ -30,6 +39,16 @@ public class ZombiePatrol : MonoBehaviour
 
     void Update()
     {
+        if (isDead) return;
+
+        // Check if zombie's health is 0 or below
+        if (zombieHealth.GetCurrentHealth() <= 0f)
+        {
+            Die();
+            
+            return;
+        }
+
         // Update the attack timer
         if (attackTimer > 0)
         {
@@ -39,23 +58,28 @@ public class ZombiePatrol : MonoBehaviour
         // Check if the player is assigned and within the attack range
         if (player != null)
         {
+            if(status.currentHealth <= 0 ){
+                TriggerGameOver();
+            }
+
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
             if (distanceToPlayer <= attackRange)
             {
                 // Switch to attack mode: follow the player
                 anim.SetTrigger("Scream"); 
                 anim.SetTrigger("Run");
-                agent.SetDestination(player.position);
-
-                if (distanceToPlayer <= agent.stoppingDistance)
+                if (distanceToPlayer <= 2)
                 {
+                    anim.SetTrigger("handAttack");
+                    
                     if (attackTimer <= 0f)
                     {
                         Debug.Log("Zombie attacks the player!");
-                       //PLACE HERE TO TAKE DAMAGE LATER ON!!!!!!!!!!!!!!!!
+                        status.TakeDamage(10);
                         attackTimer = attackCooldown;
                     }
                 }
+                agent.SetDestination(player.position);
                 return; 
             }
         }        
@@ -66,5 +90,27 @@ public class ZombiePatrol : MonoBehaviour
             currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;//goes to next waypoint
             agent.SetDestination(waypoints[currentWaypointIndex].position);
         }
+    }
+    // Trigger the Game Over UI
+    private void TriggerGameOver()
+    {
+        if (gameOverText != null)
+        {
+            gameOverText.enabled = true; // Enable the Game Over text
+        }
+        Time.timeScale = 0f; // Freeze time (game pause)
+    }
+    private void Die()
+    {
+        isDead = true;
+        agent.isStopped = true;
+        anim.SetTrigger("Death"); 
+        GetComponent<Collider>().enabled = false;//removes colider so u dont lose health
+        Invoke("DestroyAfterDeath", 5f);
+    }
+
+    private void DestroyAfterDeath()
+    {
+        Destroy(gameObject);
     }
 }

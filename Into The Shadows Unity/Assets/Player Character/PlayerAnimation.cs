@@ -5,6 +5,7 @@ public class PlayerAnimation : MonoBehaviour {
     private Animator anim;
     private float moveInputX;   // Variable to store input from movement keys
     private float moveInputY;
+    public Inventory inventory;
     void Start() {
         // Get an instance of the Animator component attached to the character.
         anim = GetComponent<Animator>();
@@ -14,10 +15,34 @@ public class PlayerAnimation : MonoBehaviour {
         moveInputX = Input.GetAxisRaw("Horizontal"); // A/D or Left/Right Arrow keys
         moveInputY = Input.GetAxisRaw("Vertical");   // W/S or Up/Down Arrow keys
 
+        if (inventory.currentItem == 1)
+        {
+            anim.SetBool("hasMelee", true);
+            anim.SetBool("hasGun", false);
+            anim.SetBool("hasConsumable", false);
+        }
+        else if (inventory.currentItem == 2)
+        {
+            anim.SetBool("hasMelee", false);
+            anim.SetBool("hasGun", true);
+            anim.SetBool("hasConsumable", false);
+        }
+        else if (inventory.currentItem == 3 || inventory.currentItem == 4 || inventory.currentItem == 5){
+            anim.SetBool("hasMelee", false);
+            anim.SetBool("hasGun", false);
+            anim.SetBool("hasConsumable", true);
+        }
+        else
+        {
+            anim.SetBool("hasMelee", false);
+            anim.SetBool("hasConsumable", false);
+            anim.SetBool("hasGun", false);
+        }
+
         // Check if there's any movement in either axis (left/right or forward/backward)
         if (moveInputX != 0 || moveInputY != 0)
-        {
-            anim.SetBool("isRunning", true); // Trigger running animation
+        {  
+            anim.SetBool("isRunning", true);
         }
         else
         {

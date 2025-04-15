@@ -4,6 +4,7 @@ using TMPro;
 
 public class Inventory : MonoBehaviour
 {
+    public GameObject[] itemsInHand;
     public Transform hotbarParent;
     public TMP_Text foodAmount;
     public TMP_Text stabilizerAmount;
@@ -18,13 +19,14 @@ public class Inventory : MonoBehaviour
     private Color normalColor;
     private Color highlight;
     private float scale = 1.2f;
+    public int currentItem;
 
 
     // 1: Melee, 2: Gun, 3: Food, 4: Stabilizers, 5: Ammo F: flashlight
     void Start()
     {
-        hasMelee = false;
-        hasGun = false;
+        hasMelee = true;
+        hasGun = true;
         hasFlashlight = false;
         food = 0;
         stabilizers = 0;
@@ -32,6 +34,7 @@ public class Inventory : MonoBehaviour
         normalColor = new Color32(103,103,103,100);
         highlight = new Color32(0,255,255,100);
         hotbarSlots = new RectTransform[6];
+        currentItem = -1;
         for (int i = 0; i < 6; i++)
         {
             hotbarSlots[i] = hotbarParent.GetChild(i).GetComponent<RectTransform>();
@@ -43,55 +46,90 @@ public class Inventory : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Debug.Log("Pressed 1");
-            HighlightItem(1);
+            EquipItem(1);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             Debug.Log("Pressed 2");
-            HighlightItem(2);
+            EquipItem(2);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             Debug.Log("Pressed 3");
-            HighlightItem(3);
+            EquipItem(3);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             Debug.Log("Pressed 4");
-            HighlightItem(4);
+            EquipItem(4);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             Debug.Log("Pressed 5");
-            HighlightItem(5);
+            EquipItem(5);
         }
         else if (Input.GetKeyDown(KeyCode.F))
         {
             Debug.Log("Pressed F");
-            HighlightItem(6);
+            EquipItem(6);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6))
         {
             Debug.Log("Pressed 6");
-            HighlightItem(6);
+            EquipItem(6);
         }
     }
 
-    void HighlightItem(int key){
+    void EquipItem(int key){
         for (int i = 0; i < hotbarSlots.Length; i++)
         {
             var image = hotbarSlots[i].GetComponent<Image>();
 
             if (i == (key - 1))
             {
-                hotbarSlots[i].localScale = Vector3.one * scale;
-                if (image != null) image.color = highlight;
+                if(key == currentItem) // Unequip current item
+                {
+                    hotbarSlots[i].localScale = Vector3.one * 1;
+                    if (image != null) image.color = normalColor;
+                    if (i == 0 || i == 1 || i == 2 || i == 3 || i == 4)
+                    {
+                        itemsInHand[i].SetActive(false);
+                    }
+                    currentItem = -1;
+                }
+                else // Equip chosen item
+                {
+                    hotbarSlots[i].localScale = Vector3.one * scale;
+                    if (image != null) image.color = highlight;
+
+                    if (i == 0 && hasMelee)
+                    {
+                        itemsInHand[i].SetActive(true);
+                    }
+
+                    if (i == 1 && hasGun)
+                    {
+                        itemsInHand[i].SetActive(true);
+                    }
+
+                    if (i == 2 || i == 3 || i == 4)
+                    {
+                        itemsInHand[i].SetActive(true);
+                    }
+                    currentItem = key;
+                }
             }
-            else
+            else // Reset state of other items
             {
                 hotbarSlots[i].localScale = Vector3.one * 1;
                 if (image != null) image.color = normalColor;
+                if (i == 0 || i == 1 || i == 2 || i == 3 || i == 4)
+                {
+                    itemsInHand[i].SetActive(false);
+                }
             }
+
+            
         }
     }
 

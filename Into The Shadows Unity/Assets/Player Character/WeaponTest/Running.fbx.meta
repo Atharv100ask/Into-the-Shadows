@@ -22,7 +22,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 1
     importConstraints: 1
-    animationCompression: 0
+    animationCompression: 3
     animationRotationError: 1
     animationPositionError: 1
     animationScaleError: 1

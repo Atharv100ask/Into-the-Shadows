@@ -15,32 +15,32 @@ public class PlayerAnimation : MonoBehaviour {
         moveInputX = Input.GetAxisRaw("Horizontal"); // A/D or Left/Right Arrow keys
         moveInputY = Input.GetAxisRaw("Vertical");   // W/S or Up/Down Arrow keys
 
-        if (inventory.currentItem == 1)
-        {
-            anim.SetBool("hasMelee", true);
-            anim.SetBool("hasGun", false);
-            anim.SetBool("hasConsumable", false);
-        }
-        else if (inventory.currentItem == 2)
-        {
-            anim.SetBool("hasMelee", false);
-            anim.SetBool("hasGun", true);
-            anim.SetBool("hasConsumable", false);
-        }
-        else if (inventory.currentItem == 3 || inventory.currentItem == 4 || inventory.currentItem == 5){
-            anim.SetBool("hasMelee", false);
-            anim.SetBool("hasGun", false);
-            anim.SetBool("hasConsumable", true);
-        }
-        else
-        {
-            anim.SetBool("hasMelee", false);
-            anim.SetBool("hasConsumable", false);
-            anim.SetBool("hasGun", false);
-        }
+        // if (inventory.currentItem == 1)
+        // {
+        //     anim.SetBool("hasMelee", true);
+        //     anim.SetBool("hasGun", false);
+        //     anim.SetBool("hasConsumable", false);
+        // }
+        // else if (inventory.currentItem == 2)
+        // {
+        //     anim.SetBool("hasMelee", false);
+        //     anim.SetBool("hasGun", true);
+        //     anim.SetBool("hasConsumable", false);
+        // }
+        // else if (inventory.currentItem == 3 || inventory.currentItem == 4 || inventory.currentItem == 5){
+        //     anim.SetBool("hasMelee", false);
+        //     anim.SetBool("hasGun", false);
+        //     anim.SetBool("hasConsumable", true);
+        // }
+        // else
+        // {
+        //     anim.SetBool("hasMelee", false);
+        //     anim.SetBool("hasConsumable", false);
+        //     anim.SetBool("hasGun", false);
+        // }
 
         // Check if there's any movement in either axis (left/right or forward/backward)
-        if (moveInputX != 0 || moveInputY != 0)
+        if ((moveInputY != 0))
         {  
             anim.SetBool("isRunning", true);
         }
@@ -48,7 +48,30 @@ public class PlayerAnimation : MonoBehaviour {
         {
             anim.SetBool("isRunning", false); // Transition back to idle
         }
-
+        //StrafeLeft
+        if (moveInputX < -0.1f)
+        {  
+            anim.SetBool("StrafeLeft", true);
+        }
+        else
+        {
+            anim.SetBool("StrafeLeft", false); // Transition back to idle
+        }
+        //StrafeRight
+        if (moveInputX > 0.1f)
+        {  
+            anim.SetBool("StrafeRight", true);
+        }
+        else
+        {
+            anim.SetBool("StrafeRight", false); // Transition back to idle
+        }
+        //jumping
+        if (Input.GetKeyDown(KeyCode.Space) == true) //&& (PlayerMovement.isGrounded == false))
+        {
+            anim.SetTrigger("isJumping");
+        }
+        
         if((HealthBar.currentInfection > 9) && (Math.Abs(HealthBar.currentInfection % 10) < 0.0001f))
         {
             anim.SetTrigger("infection_10");

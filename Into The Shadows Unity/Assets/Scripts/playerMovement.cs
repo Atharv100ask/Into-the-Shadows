@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
     public float rotationSpeed = 70;
     public float force = 200f;
     public float jumpForce = 200f;
-    private bool isGrounded = true;
+    public static bool isGrounded = true;
     //camera movement variables
     public float sensitivity = 5f;
     float xRotation = 0f;

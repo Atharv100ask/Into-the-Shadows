@@ -24,9 +24,11 @@ public class ZombiePatrol : MonoBehaviour
 
     private bool isDead = false;
 
+    public GameObject restartButton;
 
     void Start()
     {
+        Time.timeScale = 1f; 
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>(); //gets animation components
         agent.speed = patrolSpeed;
@@ -98,7 +100,12 @@ public class ZombiePatrol : MonoBehaviour
         {
             gameOverText.enabled = true; // Enable the Game Over text
         }
+
         Time.timeScale = 0f; // Freeze time (game pause)
+        if (restartButton != null)
+        {
+            restartButton.SetActive(true);
+        }
     }
     private void Die()
     {

@@ -18,3 +18,8 @@ Doors implemented used the joint constructs.
 Added road where you can run faster(no friction) where zombies are at.
 Updated lights: 
 Red area light near zombies to signify danger.
+
+
+Assignment 7: 
+Updated level design.
+We added multiple sounds like bg music for the intro scene, splash scene, and credit scene. Zombies have modified sound effects to scream when near you and zombie chase effects when chasing after you. In terms of UI, an inventory system where the user can store weapons or utensils. Additionally, visual health bars on zombies. We also included food that will spawn in certain areas that will give you health.

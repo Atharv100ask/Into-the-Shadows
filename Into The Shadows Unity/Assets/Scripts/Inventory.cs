@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class Inventory : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class Inventory : MonoBehaviour
     public int ammo;
     private Color normalColor;
     private Color highlight;
+    private Color errorColor;
     private float scale = 1.2f;
     public int currentItem;
 
@@ -25,14 +27,15 @@ public class Inventory : MonoBehaviour
     // 1: Melee, 2: Gun, 3: Food, 4: Stabilizers, 5: Ammo F: flashlight
     void Start()
     {
-        hasMelee = true;
-        hasGun = true;
+        hasMelee = false;
+        hasGun = false;
         hasFlashlight = false;
         food = 0;
         stabilizers = 0;
         ammo = 0;
         normalColor = new Color32(103,103,103,100);
         highlight = new Color32(0,255,255,100);
+        errorColor = Color.red;
         hotbarSlots = new RectTransform[6];
         currentItem = -1;
         for (int i = 0; i < 6; i++)
@@ -80,6 +83,76 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    bool hasItem(int key)
+    {
+        switch (key)
+        {
+            case 1:
+                if (!hasMelee)
+                {
+                    return false;
+                }
+                break;
+            case 2:
+                if (!hasGun)
+                {
+                    return false;
+                }
+                break;
+            case 3:
+                if (food == 0)
+                {
+                    return false;
+                }
+                break;
+            case 4:
+                if (stabilizers == 0)
+                {
+                    return false;
+                }
+                break;
+            case 5:
+                if (ammo == 0)
+                {
+                    return false;
+                }
+                break;
+            case 6:
+                if (!hasFlashlight)
+                {
+                    return false;
+                }
+                break;
+        }
+        return true;
+    }
+
+    private IEnumerator FlashRed(RectTransform slot, Image image)
+{
+    if (image == null) yield break;
+
+    // Instantly set the color to red
+    image.color = errorColor;
+
+    float flashDuration = 1f; // how long the fade lasts
+    float elapsed = 0f;
+
+    while (elapsed < flashDuration)
+    {
+        elapsed += Time.deltaTime;
+        float t = elapsed / flashDuration;
+        
+        // Smoothly blend from red back to normal color
+        image.color = Color.Lerp(errorColor, normalColor, t);
+
+        yield return null;
+    }
+
+    // Just in case rounding errors prevent a full reset
+    image.color = normalColor;
+}
+
+
     void EquipItem(int key){
         for (int i = 0; i < hotbarSlots.Length; i++)
         {
@@ -87,6 +160,12 @@ public class Inventory : MonoBehaviour
 
             if (i == (key - 1))
             {
+                if (!hasItem(key))
+                {
+                    StartCoroutine(FlashRed(hotbarSlots[i], image));
+                    currentItem = -1;
+                    continue;
+                }
                 if(key == currentItem) // Unequip current item
                 {
                     hotbarSlots[i].localScale = Vector3.one * 1;

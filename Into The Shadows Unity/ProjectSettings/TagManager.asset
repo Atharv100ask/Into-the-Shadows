@@ -6,6 +6,12 @@ TagManager:
   tags:
   - Obstacle
   - Ground
+  - Interactable
+  - Bat
+  - Gun
+  - Ammo
+  - Food
+  - Syringe
   layers:
   - Default
   - TransparentFX

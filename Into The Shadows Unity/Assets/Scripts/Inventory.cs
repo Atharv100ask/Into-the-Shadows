@@ -6,6 +6,7 @@ using System.Collections;
 public class Inventory : MonoBehaviour
 {
     public HealthBar status;
+    public BatAttack bat;
     public GameObject[] itemsInHand;
     public Transform hotbarParent;
     public TMP_Text foodAmount;
@@ -104,6 +105,7 @@ public class Inventory : MonoBehaviour
     IEnumerator AttackCooldownTimer()
     {
         isOnCooldown = true;
+        bat.EnableDamage();
 
         cooldownCanvas.gameObject.SetActive(true);
         float timeRemaining = attackCooldown;
@@ -122,6 +124,7 @@ public class Inventory : MonoBehaviour
 
         cooldownCanvas.gameObject.SetActive(false);
         isOnCooldown = false;
+        bat.DisableDamage();
     }
 
 

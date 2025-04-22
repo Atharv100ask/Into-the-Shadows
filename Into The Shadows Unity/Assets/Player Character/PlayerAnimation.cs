@@ -7,7 +7,6 @@ public class PlayerAnimation : MonoBehaviour {
     private float moveInputX;   // Variable to store input from movement keys
     private float moveInputY;
     public Inventory inventory;
-    public BatAttack bat;
     void Start() {
         // Get an instance of the Animator component attached to the character.
         anim = GetComponent<Animator>();
@@ -16,14 +15,12 @@ public class PlayerAnimation : MonoBehaviour {
     IEnumerator WaitForSwingThenReset()
     {
         anim.SetBool("Swing", true);
-        bat.EnableDamage();
 
         yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Swing"));
 
         yield return new WaitWhile(() => anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f);
 
         anim.SetBool("Swing", false);
-        bat.DisableDamage();
     }
 
     void Update() {

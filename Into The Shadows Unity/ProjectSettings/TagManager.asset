@@ -6,6 +6,13 @@ TagManager:
   tags:
   - Obstacle
   - Ground
+  - Interactable
+  - Bat
+  - Gun
+  - Ammo
+  - Food
+  - Syringe
+  - Zombie
   layers:
   - Default
   - TransparentFX
@@ -16,7 +23,7 @@ TagManager:
   - UI
   - NoCollision
   - Obstacle
-  - 
+  - Items
   - 
   - 
   - 

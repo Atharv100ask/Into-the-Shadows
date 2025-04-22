@@ -12,6 +12,15 @@ public class DialogueUI : MonoBehaviour
     {
         dialoguePanel.SetActive(false);
     }
+    
+    private void Update()
+    {
+        if (dialoguePanel.activeSelf && Input.GetKeyDown(KeyCode.Escape))//if dialogue is active we can use esc to hide it
+        {
+            HideDialogue();
+        }
+    }
+
 
     public void ShowDialogue(string message)
     {

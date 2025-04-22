@@ -1,14 +1,29 @@
 using UnityEngine;
 using System;
+using System.Collections;
 
 public class PlayerAnimation : MonoBehaviour {
     private Animator anim;
     private float moveInputX;   // Variable to store input from movement keys
     private float moveInputY;
     public Inventory inventory;
+    public BatAttack bat;
     void Start() {
         // Get an instance of the Animator component attached to the character.
         anim = GetComponent<Animator>();
+    }
+
+    IEnumerator WaitForSwingThenReset()
+    {
+        anim.SetBool("Swing", true);
+        bat.EnableDamage();
+
+        yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Swing"));
+
+        yield return new WaitWhile(() => anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f);
+
+        anim.SetBool("Swing", false);
+        bat.DisableDamage();
     }
 
     void Update() {
@@ -37,6 +52,11 @@ public class PlayerAnimation : MonoBehaviour {
             anim.SetBool("hasMelee", false);
             anim.SetBool("hasConsumable", false);
             anim.SetBool("hasGun", false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0) && inventory.currentItem == 1)
+        {
+            StartCoroutine(WaitForSwingThenReset());
         }
 
         // Check if there's any movement in either axis (left/right or forward/backward)

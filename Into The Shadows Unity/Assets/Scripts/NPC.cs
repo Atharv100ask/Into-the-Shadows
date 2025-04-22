@@ -7,13 +7,13 @@ public enum NPCState {
     DialogueUneasy,
     DialogueEmpathy,
     DialoguePostItemUse,
-    DialogueNeutral
+    DialogueNeutral,
+    Intro
 }
 
 public class NPC : MonoBehaviour
 {
     public DialogueUI dialogue;
-    public float detectionRadius = 5f;
     private bool isPlayerNearby = false;
     private Transform nearbyPlayer;
     public HealthBar status;
@@ -21,6 +21,8 @@ public class NPC : MonoBehaviour
     private Animator animator;
     private Coroutine currentAnimRoutine;
     public Canvas tooltip;
+    public bool intro;
+    public Inventory inventory;
 
 
     private bool hasGivenItem = false;
@@ -29,6 +31,7 @@ public class NPC : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        intro = false;
     }
 
     void Update()
@@ -37,6 +40,7 @@ public class NPC : MonoBehaviour
 
         if (isPlayerNearby)
         {
+            Debug.Log("Near");
             Vector3 targetDirection = nearbyPlayer.position - transform.position;
             targetDirection.y = 0;
 
@@ -71,7 +75,7 @@ public class NPC : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, playerObj.transform.position);
 
-        if (distance < detectionRadius)
+        if (distance < 2.5)
         {
             isPlayerNearby = true;
             nearbyPlayer = playerObj.transform;
@@ -93,7 +97,12 @@ public class NPC : MonoBehaviour
             Debug.Log("Status missing error");
         }
 
-        if (HealthBar.currentInfection >= 80f)
+        if(!intro)
+        {
+            currentState = NPCState.Intro;
+            intro = true;
+        }
+        else if (HealthBar.currentInfection >= 80f)
         {
             currentState = NPCState.DialogueFear;
         }
@@ -122,6 +131,12 @@ public class NPC : MonoBehaviour
     {
         switch (currentState)
         {
+            case NPCState.Intro:
+                ShowDialogue("Hey there. The world's gone to shit, zombies are everywhere and the sun infects you. " +
+                "I heard there's a cure in this town, but there's no way I'm leaving this building. Take this map and grab that bat " +
+                "if you want to try your luck. Take care.");
+                inventory.hasMap = true;
+                break;
             case NPCState.DialogueFear:
                 ShowDialogue("Hey are you infected!? Stay away from me!");
                 break;
@@ -159,6 +174,9 @@ public class NPC : MonoBehaviour
         string animName = "";
         switch (currentState)
         {
+            case NPCState.Intro:
+                animName = "HandItem";
+                break;
             case NPCState.DialogueFear:
                 animName = "Fear";
                 break;

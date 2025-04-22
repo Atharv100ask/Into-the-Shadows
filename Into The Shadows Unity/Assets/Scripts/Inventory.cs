@@ -97,8 +97,45 @@ public class Inventory : MonoBehaviour
         {
             UseItem();
         }
-        else if (Input.GetKeyDown(KeyCode.Escape)){
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
             mapDisplay.gameObject.SetActive(false);
+        }
+
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        int equip = 0;
+
+        if (scroll < 0f)
+        {
+            Debug.Log("Scroll Down");
+            mapDisplay.gameObject.SetActive(false);
+
+            if (currentItem + 1 > 6)
+            {
+                equip = 1;
+            }
+            else
+            {
+                equip = currentItem + 1;
+            }
+            
+            EquipItem(equip);
+        }
+        else if (scroll > 0f)
+        {
+            Debug.Log("Scroll Up");
+            mapDisplay.gameObject.SetActive(false);
+
+            if (currentItem - 1 < 1)
+            {
+                equip = 6;
+            } 
+            else
+            {
+                equip = currentItem - 1;
+            }
+            
+            EquipItem(equip);
         }
     }
 

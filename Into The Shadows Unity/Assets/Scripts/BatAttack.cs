@@ -2,8 +2,13 @@ using UnityEngine;
 
 public class BatAttack : MonoBehaviour
 {
-    public int damage = 20;
+    public int damage = 35;
     private bool canDamage = false;
+    private Animator batAnim;
+
+    void awake(){
+        batAnim = GetComponent<Animator>();//gets animator
+    }
 
     void OnTriggerEnter(Collider other)
     {
@@ -16,6 +21,11 @@ public class BatAttack : MonoBehaviour
             if (zombie != null)
             {
                 Debug.Log("Check");
+                Animator zombieAnim = other.GetComponentInParent<Animator>();
+                if (zombieAnim != null)
+                {
+                    zombieAnim.SetTrigger("Hit");
+                }
                 zombie.TakeDamage(damage);
                 DisableDamage();
             }

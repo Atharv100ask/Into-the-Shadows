@@ -5,7 +5,7 @@ public class LightingManager : MonoBehaviour
     [SerializeField] private Light DirectionalLight;
     [SerializeField] private Transform Player; // Player reference
     [SerializeField] private PlayerInfection playerInfection; // Reference to PlayerInfection
-    [SerializeField] private float infectionInterval = 2f; // Interval to increase infection
+    [SerializeField] private float infectionInterval = 1f; // Interval to increase infection
     private float infectionTimer = 0f;
 
     private void Update()

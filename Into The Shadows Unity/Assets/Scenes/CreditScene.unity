@@ -548,8 +548,9 @@ MonoBehaviour:
   - Thanks for playing!!!
   - 'Credits to: Universfield for credit music, Sound Library for music in intro
     scene, and Mixkit for welcome music.'
+  - 'Game created by: Alejandro Bravo, Hieu Cao, and Atharv Kokate '
   fadeTime: 0.5
-  displayTime: 2
+  displayTime: 1.25
   nextSceneName: 
   audioSource: {fileID: 753640220}
   startClip: {fileID: 8300000, guid: a9651101a43c94542b93c0aa9e1efb18, type: 3}

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections;
 
 public class PlayerAnimation : MonoBehaviour {
     private Animator anim;
@@ -9,6 +10,17 @@ public class PlayerAnimation : MonoBehaviour {
     void Start() {
         // Get an instance of the Animator component attached to the character.
         anim = GetComponent<Animator>();
+    }
+
+    IEnumerator WaitForSwingThenReset()
+    {
+        anim.SetBool("Swing", true);
+
+        yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Swing"));
+
+        yield return new WaitWhile(() => anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f);
+
+        anim.SetBool("Swing", false);
     }
 
     void Update() {
@@ -39,6 +51,11 @@ public class PlayerAnimation : MonoBehaviour {
             anim.SetBool("hasGun", false);
         }
 
+        if (Input.GetKeyDown(KeyCode.Mouse0) && inventory.currentItem == 1)
+        {
+            StartCoroutine(WaitForSwingThenReset());
+        }
+
         // Check if there's any movement in either axis (left/right or forward/backward)
         if ((moveInputY != 0))
         {  
@@ -67,19 +84,19 @@ public class PlayerAnimation : MonoBehaviour {
             anim.SetBool("StrafeRight", false); // Transition back to idle
         }
         //jumping
-        if (Input.GetKeyDown(KeyCode.Space) == true) //&& (PlayerMovement.isGrounded == false))
+        if (Input.GetKeyDown(KeyCode.Space) == true&& (PlayerMovement.isGrounded == true))
         {
             anim.SetTrigger("isJumping");
         }
         
-        if((HealthBar.currentInfection > 9) && (Math.Abs(HealthBar.currentInfection % 10) < 0.0001f))
-        {
-            anim.SetTrigger("infection_10");
-        }
+        // if((HealthBar.currentInfection > 9) && (Math.Abs(HealthBar.currentInfection % 10) < 0.0001f))
+        // {
+        //     anim.SetTrigger("infection_10");
+        // }
 
-        if(Math.Abs(HealthBar.currentInfection - 75) < 0.0001f)
-        {
-            anim.SetTrigger("infection_75");
-        }
+        // if(Math.Abs(HealthBar.currentInfection - 75) < 0.0001f)
+        // {
+        //     anim.SetTrigger("infection_75");
+        // }
     }
 }

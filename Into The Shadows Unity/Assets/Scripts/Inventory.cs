@@ -5,15 +5,28 @@ using System.Collections;
 
 public class Inventory : MonoBehaviour
 {
+    public Camera playerCamera;
+    public HealthBar status;
+    public BatAttack bat;
     public GameObject[] itemsInHand;
     public Transform hotbarParent;
     public TMP_Text foodAmount;
     public TMP_Text stabilizerAmount;
     public TMP_Text ammoAmount;
     private RectTransform[] hotbarSlots;
+    public GameObject healthEffectParticles;
+    public GameObject stabilizerEffectParticles;
+    public Transform effectSpawnPoint;
+    public AudioSource audioSource;
+    public AudioClip consumableSound;
+    public LayerMask targetMask;
+    public ParticleSystem muzzleFlash;
+    public AudioClip shotSound;
+    public AudioClip emptyGunSound;
+    public Canvas mapDisplay;
     public bool hasMelee;
     public bool hasGun;
-    public bool hasFlashlight;
+    public bool hasMap;
     public int food;
     public int stabilizers;
     public int ammo;
@@ -22,15 +35,25 @@ public class Inventory : MonoBehaviour
     private Color errorColor;
     private float scale = 1.2f;
     public int currentItem;
+    public Canvas cooldownCanvas;
+    public TMP_Text cooldownText;
+    private bool isOnCooldown = false;
+    private float attackCooldown = 1.8f;
+    public AudioClip batSwing;
+    private bool canShoot = true;
+    public float shootCooldown = 0.5f;
+    public float shootRange = 100f;
+    public int gunDamage = 50;
+    public AudioClip pickupSound;
 
 
-    // 1: Melee, 2: Gun, 3: Food, 4: Stabilizers, 5: Ammo F: flashlight
+    // 1: Melee, 2: Gun, 3: Food, 4: Stabilizers, 5: Ammo 6: Map
     void Start()
     {
         hasMelee = false;
         hasGun = false;
-        hasFlashlight = false;
-        food = 0;
+        hasMap = false;
+        food = 2;
         stabilizers = 0;
         ammo = 0;
         normalColor = new Color32(103,103,103,100);
@@ -42,6 +65,7 @@ public class Inventory : MonoBehaviour
         {
             hotbarSlots[i] = hotbarParent.GetChild(i).GetComponent<RectTransform>();
         }
+        UpdateItemCount();
     }
 
     void Update()
@@ -71,9 +95,9 @@ public class Inventory : MonoBehaviour
             Debug.Log("Pressed 5");
             EquipItem(5);
         }
-        else if (Input.GetKeyDown(KeyCode.F))
+        else if (Input.GetKeyDown(KeyCode.M))
         {
-            Debug.Log("Pressed F");
+            Debug.Log("Pressed M");
             EquipItem(6);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6))
@@ -81,7 +105,212 @@ public class Inventory : MonoBehaviour
             Debug.Log("Pressed 6");
             EquipItem(6);
         }
+        else if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            UseItem();
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            mapDisplay.gameObject.SetActive(false);
+        }
+
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        int equip = 0;
+
+        if (scroll < 0f)
+        {
+            Debug.Log("Scroll Down");
+            mapDisplay.gameObject.SetActive(false);
+
+            if (currentItem + 1 > 6)
+            {
+                equip = 1;
+            }
+            else
+            {
+                equip = currentItem + 1;
+            }
+            
+            EquipItem(equip);
+        }
+        else if (scroll > 0f)
+        {
+            Debug.Log("Scroll Up");
+            mapDisplay.gameObject.SetActive(false);
+
+            if (currentItem - 1 < 1)
+            {
+                equip = 6;
+            } 
+            else
+            {
+                equip = currentItem - 1;
+            }
+            
+            EquipItem(equip);
+        }
     }
+
+    IEnumerator AttackCooldownTimer()
+    {
+        isOnCooldown = true;
+        bat.EnableDamage();
+        audioSource.volume = 0.3f;
+        audioSource.PlayOneShot(batSwing);
+
+        cooldownCanvas.gameObject.SetActive(true);
+        float timeRemaining = attackCooldown;
+
+        var image = hotbarSlots[0].GetComponent<Image>();
+
+        if (image != null) image.color = normalColor;
+
+        while (timeRemaining > 0)
+        {
+            timeRemaining -= Time.deltaTime;
+            cooldownText.text = Mathf.Max(timeRemaining, 0).ToString("F2");
+            yield return null;
+        }
+        if (image != null) image.color = highlight;
+
+        cooldownCanvas.gameObject.SetActive(false);
+        isOnCooldown = false;
+        bat.DisableDamage();
+    }
+
+    private IEnumerator Shoot()
+    {
+        Debug.Log("Shot");
+        canShoot = false;
+        ammo -= 1;
+        UpdateItemCount();
+
+        muzzleFlash.Play();
+        audioSource.volume = 0.1f;
+        audioSource.PlayOneShot(shotSound);
+
+        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, shootRange, targetMask))
+        {
+            Debug.Log("Hit: " + hit.collider.name);
+
+            ZombieHealthBar zombie = hit.collider.GetComponentInChildren<ZombieHealthBar>();
+            if (zombie != null)
+            {
+                zombie.TakeDamage(gunDamage);
+            }
+        }
+
+        yield return new WaitForSeconds(shootCooldown);
+
+        canShoot = true;
+    }
+
+    public void ItemPickupSound()
+    {
+        audioSource.volume = 0.3f;
+        audioSource.PlayOneShot(pickupSound);
+    }
+
+    void UseItem()
+    {
+        Debug.Log(currentItem);
+        switch (currentItem)
+        {
+            
+            case 1:
+                if (hasMelee && !isOnCooldown)
+                {
+                    Debug.Log("Swing");
+                    StartCoroutine(AttackCooldownTimer());
+                }
+                break;
+            case 2:
+                if (canShoot && ammo > 0)
+                {
+                    StartCoroutine(Shoot());
+                }
+                else if (ammo == 0)
+                {
+                    audioSource.volume = 0.1f;
+                    audioSource.PlayOneShot(emptyGunSound);
+                }
+                break;
+            case 3:
+                Debug.Log("Check");
+                if (food > 0)
+                {
+                    PlayConsumableEffects(0);
+                    food--;
+                    if (status.currentHealth + 50 > status.maxHealth)
+                    {
+                        status.currentHealth = status.maxHealth;
+                    }
+                    else
+                    {
+                        status.currentHealth += 50;
+                    }
+                    status.UpdateHealthBar();
+                    UpdateItemCount();
+                }
+                break;
+            case 4:
+                Debug.Log("Check");
+                if (stabilizers > 0)
+                {
+                    PlayConsumableEffects(1);
+                    stabilizers--;
+                    if (HealthBar.currentInfection - 35 < 0)
+                    {
+                        status.UpdateInfectionBar(0);
+                    }
+                    else
+                    {
+                        status.UpdateInfectionBar(-35);
+                    }
+                    
+                    UpdateItemCount();
+                }
+                break;
+            case 5:
+                if (ammo > 0)
+                {
+                    Debug.Log("Ammo Used");
+                }
+                break;
+            case 6:
+                if (hasMap)
+                {
+                    mapDisplay.gameObject.SetActive(true);
+                }
+                break;
+        }
+    }
+
+    void PlayConsumableEffects(int effect)
+    {
+        if (effect == 0)
+        {
+            Vector3 spawnOffset = new Vector3(-0.5f, 0f, 0f);
+            var effect1 = Instantiate(healthEffectParticles, effectSpawnPoint.position + spawnOffset, Quaternion.identity, effectSpawnPoint);
+            Destroy(effect1, 3f);
+        }
+        else 
+        {
+            Vector3 spawnOffset = new Vector3(-0.5f, 0f, 0f);
+            var effect2 = Instantiate(stabilizerEffectParticles, effectSpawnPoint.position + spawnOffset, Quaternion.identity, effectSpawnPoint);
+            Destroy(effect2, 3f);
+        }
+
+        if (audioSource != null && consumableSound != null)
+        {
+            audioSource.volume = 0.1f;
+            audioSource.PlayOneShot(consumableSound);
+        }
+    }
+
 
     bool hasItem(int key)
     {
@@ -118,7 +347,7 @@ public class Inventory : MonoBehaviour
                 }
                 break;
             case 6:
-                if (!hasFlashlight)
+                if (!hasMap)
                 {
                     return false;
                 }
@@ -128,29 +357,26 @@ public class Inventory : MonoBehaviour
     }
 
     private IEnumerator FlashRed(RectTransform slot, Image image)
-{
-    if (image == null) yield break;
-
-    // Instantly set the color to red
-    image.color = errorColor;
-
-    float flashDuration = 1f; // how long the fade lasts
-    float elapsed = 0f;
-
-    while (elapsed < flashDuration)
     {
-        elapsed += Time.deltaTime;
-        float t = elapsed / flashDuration;
-        
-        // Smoothly blend from red back to normal color
-        image.color = Color.Lerp(errorColor, normalColor, t);
+        if (image == null) yield break;
 
-        yield return null;
+        image.color = errorColor;
+
+        float flashDuration = 1f; 
+        float elapsed = 0f;
+
+        while (elapsed < flashDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / flashDuration;
+            
+            image.color = Color.Lerp(errorColor, normalColor, t);
+
+            yield return null;
+        }
+
+        image.color = normalColor;
     }
-
-    // Just in case rounding errors prevent a full reset
-    image.color = normalColor;
-}
 
 
     void EquipItem(int key){
@@ -170,10 +396,7 @@ public class Inventory : MonoBehaviour
                 {
                     hotbarSlots[i].localScale = Vector3.one * 1;
                     if (image != null) image.color = normalColor;
-                    if (i == 0 || i == 1 || i == 2 || i == 3 || i == 4)
-                    {
-                        itemsInHand[i].SetActive(false);
-                    }
+                    itemsInHand[i].SetActive(false);
                     currentItem = -1;
                 }
                 else // Equip chosen item
@@ -181,20 +404,8 @@ public class Inventory : MonoBehaviour
                     hotbarSlots[i].localScale = Vector3.one * scale;
                     if (image != null) image.color = highlight;
 
-                    if (i == 0 && hasMelee)
-                    {
-                        itemsInHand[i].SetActive(true);
-                    }
-
-                    if (i == 1 && hasGun)
-                    {
-                        itemsInHand[i].SetActive(true);
-                    }
-
-                    if (i == 2 || i == 3 || i == 4)
-                    {
-                        itemsInHand[i].SetActive(true);
-                    }
+                    itemsInHand[i].SetActive(true);
+                    
                     currentItem = key;
                 }
             }
@@ -202,13 +413,8 @@ public class Inventory : MonoBehaviour
             {
                 hotbarSlots[i].localScale = Vector3.one * 1;
                 if (image != null) image.color = normalColor;
-                if (i == 0 || i == 1 || i == 2 || i == 3 || i == 4)
-                {
-                    itemsInHand[i].SetActive(false);
-                }
+                itemsInHand[i].SetActive(false);
             }
-
-            
         }
     }
 

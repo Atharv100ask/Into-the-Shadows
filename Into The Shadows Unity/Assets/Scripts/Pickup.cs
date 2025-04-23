@@ -18,7 +18,7 @@ public class Pickup : MonoBehaviour
         else if(gameObject.tag == "Ammo")
         {
             Debug.Log("Ammo Picked up");
-            inventory.ammo += 1;
+            inventory.ammo += 6;
             inventory.UpdateItemCount();
         }
         else if(gameObject.tag == "Syringe")
@@ -41,5 +41,6 @@ public class Pickup : MonoBehaviour
         // status.currentHealth += 25f;
         // Debug.Log("Health: " + status.currentHealth);
         // status.UpdateHealthBar();
+        inventory.ItemPickupSound();
     }
 }

@@ -12,6 +12,7 @@ TagManager:
   - Ammo
   - Food
   - Syringe
+  - Zombie
   layers:
   - Default
   - TransparentFX
@@ -22,8 +23,8 @@ TagManager:
   - UI
   - NoCollision
   - Obstacle
-  - 
-  - 
+  - Items
+  - Zombie
   - 
   - 
   - 

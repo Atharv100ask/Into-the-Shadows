@@ -11,7 +11,7 @@ public class ZombiePatrol : MonoBehaviour
     public Transform player;        
     public float attackRange = 2f;    
     public float attackCooldown = 2f; 
-    public TextMeshProUGUI gameOverText; // Use TextMeshProUGUI for TextMeshPro
+    public TextMeshProUGUI gameOverText;
 
     private int currentWaypointIndex = 0;
     private NavMeshAgent agent;
@@ -70,7 +70,7 @@ public class ZombiePatrol : MonoBehaviour
                 // Switch to attack mode: follow the player
                 anim.SetTrigger("Scream"); 
                 anim.SetTrigger("Run");
-                if (distanceToPlayer <= 2)
+                if (distanceToPlayer <= 1)
                 {
                     anim.SetTrigger("handAttack");
                     

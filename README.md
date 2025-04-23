@@ -23,3 +23,7 @@ Red area light near zombies to signify danger.
 Assignment 7: 
 Updated level design.
 We added multiple sounds like bg music for the intro scene, splash scene, and credit scene. Zombies have modified sound effects to scream when near you and zombie chase effects when chasing after you. In terms of UI, an inventory system where the user can store weapons or utensils. Additionally, visual health bars on zombies. We also included food that will spawn in certain areas that will give you health.
+
+Assignment 8:
+Updated level design - Added melee weapon on floor, Updated credit scenes. Added 3 different shaders one for obstacles, weapons/consumables, and other for buildings. Updated zombies to get hit reaction and now lose health from bat. Fixed city colliders. Added a new city. Added zombie hordes to the new city and placed cure. Added map to guide users.
+

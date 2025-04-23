@@ -84,19 +84,19 @@ public class PlayerAnimation : MonoBehaviour {
             anim.SetBool("StrafeRight", false); // Transition back to idle
         }
         //jumping
-        if (Input.GetKeyDown(KeyCode.Space) == true) //&& (PlayerMovement.isGrounded == false))
+        if (Input.GetKeyDown(KeyCode.Space) == true&& (PlayerMovement.isGrounded == true))
         {
             anim.SetTrigger("isJumping");
         }
         
-        if((HealthBar.currentInfection > 9) && (Math.Abs(HealthBar.currentInfection % 10) < 0.0001f))
-        {
-            anim.SetTrigger("infection_10");
-        }
+        // if((HealthBar.currentInfection > 9) && (Math.Abs(HealthBar.currentInfection % 10) < 0.0001f))
+        // {
+        //     anim.SetTrigger("infection_10");
+        // }
 
-        if(Math.Abs(HealthBar.currentInfection - 75) < 0.0001f)
-        {
-            anim.SetTrigger("infection_75");
-        }
+        // if(Math.Abs(HealthBar.currentInfection - 75) < 0.0001f)
+        // {
+        //     anim.SetTrigger("infection_75");
+        // }
     }
 }

@@ -5,6 +5,7 @@ using System.Collections;
 
 public class Inventory : MonoBehaviour
 {
+    public Camera playerCamera;
     public HealthBar status;
     public BatAttack bat;
     public GameObject[] itemsInHand;
@@ -18,6 +19,10 @@ public class Inventory : MonoBehaviour
     public Transform effectSpawnPoint;
     public AudioSource audioSource;
     public AudioClip consumableSound;
+    public LayerMask targetMask;
+    public ParticleSystem muzzleFlash;
+    public AudioClip shotSound;
+    public AudioClip emptyGunSound;
     public Canvas mapDisplay;
     public bool hasMelee;
     public bool hasGun;
@@ -34,17 +39,21 @@ public class Inventory : MonoBehaviour
     public TMP_Text cooldownText;
     private bool isOnCooldown = false;
     private float attackCooldown = 1.8f;
+    private bool canShoot = true;
+    public float shootCooldown = 0.5f;
+    public float shootRange = 100f;
+    public int gunDamage = 50;
 
 
     // 1: Melee, 2: Gun, 3: Food, 4: Stabilizers, 5: Ammo 6: Map
     void Start()
     {
         hasMelee = false;
-        hasGun = false;
+        hasGun = true;
         hasMap = false;
         food = 3;
         stabilizers = 3;
-        ammo = 0;
+        ammo = 10;
         normalColor = new Color32(103,103,103,100);
         highlight = new Color32(0,255,255,100);
         errorColor = Color.red;
@@ -164,11 +173,42 @@ public class Inventory : MonoBehaviour
         bat.DisableDamage();
     }
 
+    private IEnumerator Shoot()
+    {
+        Debug.Log("Shot");
+        canShoot = false;
+        ammo -= 1;
+        UpdateItemCount();
+
+        muzzleFlash.Play();
+        audioSource.volume = 0.05f;
+        audioSource.PlayOneShot(shotSound);
+
+        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, shootRange, targetMask))
+        {
+            Debug.Log("Hit: " + hit.collider.name);
+
+            ZombieHealthBar zombie = hit.collider.GetComponentInChildren<ZombieHealthBar>();
+            if (zombie != null)
+            {
+                zombie.TakeDamage(gunDamage);
+            }
+        }
+
+        yield return new WaitForSeconds(shootCooldown);
+
+        canShoot = true;
+    }
 
     void UseItem()
     {
+        Debug.Log(currentItem);
         switch (currentItem)
         {
+            
             case 1:
                 if (hasMelee && !isOnCooldown)
                 {
@@ -177,9 +217,18 @@ public class Inventory : MonoBehaviour
                 }
                 break;
             case 2:
-                
+                if (canShoot && ammo > 0)
+                {
+                    StartCoroutine(Shoot());
+                }
+                else if (ammo == 0)
+                {
+                    audioSource.volume = 0.1f;
+                    audioSource.PlayOneShot(emptyGunSound);
+                }
                 break;
             case 3:
+                Debug.Log("Check");
                 if (food > 0)
                 {
                     PlayConsumableEffects(0);
@@ -196,6 +245,7 @@ public class Inventory : MonoBehaviour
                 }
                 break;
             case 4:
+                Debug.Log("Check");
                 if (stabilizers > 0)
                 {
                     PlayConsumableEffects(1);
@@ -243,7 +293,7 @@ public class Inventory : MonoBehaviour
 
         if (audioSource != null && consumableSound != null)
         {
-            audioSource.volume = 0.02f;
+            audioSource.volume = 0.05f;
             audioSource.PlayOneShot(consumableSound);
         }
     }

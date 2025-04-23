@@ -39,10 +39,12 @@ public class Inventory : MonoBehaviour
     public TMP_Text cooldownText;
     private bool isOnCooldown = false;
     private float attackCooldown = 1.8f;
+    public AudioClip batSwing;
     private bool canShoot = true;
     public float shootCooldown = 0.5f;
     public float shootRange = 100f;
     public int gunDamage = 50;
+    public AudioClip pickupSound;
 
 
     // 1: Melee, 2: Gun, 3: Food, 4: Stabilizers, 5: Ammo 6: Map
@@ -152,6 +154,8 @@ public class Inventory : MonoBehaviour
     {
         isOnCooldown = true;
         bat.EnableDamage();
+        audioSource.volume = 0.1f;
+        audioSource.PlayOneShot(batSwing);
 
         cooldownCanvas.gameObject.SetActive(true);
         float timeRemaining = attackCooldown;
@@ -201,6 +205,12 @@ public class Inventory : MonoBehaviour
         yield return new WaitForSeconds(shootCooldown);
 
         canShoot = true;
+    }
+
+    public void ItemPickupSound()
+    {
+        audioSource.volume = 0.07f;
+        audioSource.PlayOneShot(pickupSound);
     }
 
     void UseItem()

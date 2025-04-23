@@ -41,5 +41,6 @@ public class Pickup : MonoBehaviour
         // status.currentHealth += 25f;
         // Debug.Log("Health: " + status.currentHealth);
         // status.UpdateHealthBar();
+        inventory.ItemPickupSound();
     }
 }

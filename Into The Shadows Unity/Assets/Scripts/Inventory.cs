@@ -51,11 +51,11 @@ public class Inventory : MonoBehaviour
     void Start()
     {
         hasMelee = false;
-        hasGun = true;
+        hasGun = false;
         hasMap = false;
-        food = 3;
-        stabilizers = 3;
-        ammo = 10;
+        food = 2;
+        stabilizers = 0;
+        ammo = 0;
         normalColor = new Color32(103,103,103,100);
         highlight = new Color32(0,255,255,100);
         errorColor = Color.red;
@@ -65,6 +65,7 @@ public class Inventory : MonoBehaviour
         {
             hotbarSlots[i] = hotbarParent.GetChild(i).GetComponent<RectTransform>();
         }
+        UpdateItemCount();
     }
 
     void Update()
@@ -154,7 +155,7 @@ public class Inventory : MonoBehaviour
     {
         isOnCooldown = true;
         bat.EnableDamage();
-        audioSource.volume = 0.1f;
+        audioSource.volume = 0.3f;
         audioSource.PlayOneShot(batSwing);
 
         cooldownCanvas.gameObject.SetActive(true);
@@ -185,7 +186,7 @@ public class Inventory : MonoBehaviour
         UpdateItemCount();
 
         muzzleFlash.Play();
-        audioSource.volume = 0.05f;
+        audioSource.volume = 0.1f;
         audioSource.PlayOneShot(shotSound);
 
         Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
@@ -209,7 +210,7 @@ public class Inventory : MonoBehaviour
 
     public void ItemPickupSound()
     {
-        audioSource.volume = 0.07f;
+        audioSource.volume = 0.3f;
         audioSource.PlayOneShot(pickupSound);
     }
 
@@ -243,14 +244,15 @@ public class Inventory : MonoBehaviour
                 {
                     PlayConsumableEffects(0);
                     food--;
-                    if (status.currentHealth + 25 > status.maxHealth)
+                    if (status.currentHealth + 50 > status.maxHealth)
                     {
                         status.currentHealth = status.maxHealth;
                     }
                     else
                     {
-                        status.currentHealth += 25;
+                        status.currentHealth += 50;
                     }
+                    status.UpdateHealthBar();
                     UpdateItemCount();
                 }
                 break;
@@ -260,14 +262,15 @@ public class Inventory : MonoBehaviour
                 {
                     PlayConsumableEffects(1);
                     stabilizers--;
-                    if (HealthBar.currentInfection - 25 < 0)
+                    if (HealthBar.currentInfection - 35 < 0)
                     {
-                        HealthBar.currentInfection = 0;
+                        status.UpdateInfectionBar(0);
                     }
                     else
                     {
-                        HealthBar.currentInfection -= 25;
+                        status.UpdateInfectionBar(-35);
                     }
+                    
                     UpdateItemCount();
                 }
                 break;
@@ -303,7 +306,7 @@ public class Inventory : MonoBehaviour
 
         if (audioSource != null && consumableSound != null)
         {
-            audioSource.volume = 0.05f;
+            audioSource.volume = 0.1f;
             audioSource.PlayOneShot(consumableSound);
         }
     }

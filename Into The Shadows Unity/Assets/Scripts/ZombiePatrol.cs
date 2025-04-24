@@ -25,11 +25,13 @@ public class ZombiePatrol : MonoBehaviour
     private bool isDead = false;
 
     public GameObject restartButton;
+    
 
     void Start()
     {
         Time.timeScale = 1f; 
         agent = GetComponent<NavMeshAgent>();
+        agent.stoppingDistance = 1.3f;//distance to stop from player
         anim = GetComponent<Animator>(); //gets animation components
         agent.speed = patrolSpeed;
 

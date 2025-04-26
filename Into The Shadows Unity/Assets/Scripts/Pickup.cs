@@ -37,10 +37,7 @@ public class Pickup : MonoBehaviour
             Debug.Log("Gun picked up");
             inventory.hasGun = true;
         }
-        // Debug.Log("Health: " + status.currentHealth);
-        // status.currentHealth += 25f;
-        // Debug.Log("Health: " + status.currentHealth);
-        // status.UpdateHealthBar();
         inventory.ItemPickupSound();
+        inventory.UpdateImages();
     }
 }

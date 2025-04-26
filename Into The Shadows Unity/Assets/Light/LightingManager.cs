@@ -2,32 +2,51 @@ using UnityEngine;
 
 public class LightingManager : MonoBehaviour
 {
-    [SerializeField] private Light DirectionalLight;
-    [SerializeField] private Transform Player; // Player reference
-    [SerializeField] private PlayerInfection playerInfection; // Reference to PlayerInfection
-    [SerializeField] private float infectionInterval = 1f; // Interval to increase infection
-    private float infectionTimer = 0f;
+    [Header("References")]
+    public Light sunLight;                   // Assign your Directional Light here
+    public Transform player;                 // Assign your Player's Transform
 
-    private void Update()
+    [Header("Infection Settings")]
+    public float infectionRate = 2.0f;         // Infection increase per second in sunlight
+    public static float currentInfection = 0f;      // Optional: track infection over time
+    public float maxInfection = 100f;
+
+    [Header("Raycast Settings")]
+    public LayerMask obstructionMask;        // Set to "Environment" or what blocks sun
+    public float rayOriginHeight = 0.0f;     // Height from player position to cast from
+    public PlayerInfection PlayerInfection;
+    void Update()
     {
-        infectionTimer += Time.deltaTime;
-
-        if (infectionTimer >= infectionInterval)
+        if (IsInDirectSunlight())
         {
-            if (IsPlayerInSunlight())
-            {
-                playerInfection.IncreaseInfection(1); // Increase infection level
-            }
-            infectionTimer = 0f; // Reset timer
+            // Increase infection over time
+            // currentInfection += infectionRate * Time.deltaTime;
+            // currentInfection = Mathf.Clamp(currentInfection, 0, maxInfection);
+            PlayerInfection.IncreaseInfection(infectionRate * Time.deltaTime);
         }
+
+        // Debug info
+        // Debug.Log("Infection Level: " + currentInfection);
     }
 
-    private bool IsPlayerInSunlight()
+    bool IsInDirectSunlight()
     {
-        RaycastHit hit;
-        Vector3 sunDirection = -DirectionalLight.transform.forward;
-        Vector3 rayOrigin = Player.position + Vector3.up * 2f;
+        if (sunLight == null || player == null) return false;
 
-        return !Physics.Raycast(rayOrigin, sunDirection, out hit, Mathf.Infinity);
+        // Direction light is shining FROM (cast a ray TOWARD the sun)
+        Vector3 sunDirection = -sunLight.transform.forward;
+
+        // Start from above the player's head
+        Vector3 rayOrigin = player.position + Vector3.up * rayOriginHeight;
+
+        // Check for obstructions between player and sun
+        if (Physics.Raycast(rayOrigin, sunDirection, out RaycastHit hit, Mathf.Infinity, obstructionMask))
+        {
+            Debug.DrawRay(rayOrigin, sunDirection * 5f, Color.red); // Obstructed
+            return false;
+        }
+
+        Debug.DrawRay(rayOrigin, sunDirection * 5f, Color.green); // In sun
+        return true;
     }
 }

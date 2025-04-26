@@ -5,7 +5,10 @@ using System.Collections;
 
 public class Inventory : MonoBehaviour
 {
-    public Camera playerCamera;
+    public Camera mainCamera;
+    public Camera adsCamera;
+    public Camera hitscanCamera;
+    Rigidbody rb;
     public HealthBar status;
     public BatAttack bat;
     public GameObject[] itemsInHand;
@@ -31,15 +34,18 @@ public class Inventory : MonoBehaviour
     public int stabilizers;
     public int ammo;
     private Color normalColor;
+    private Color noneColor;
     private Color highlight;
     private Color errorColor;
     private float scale = 1.2f;
     public int currentItem;
-    public Canvas cooldownCanvas;
-    public TMP_Text cooldownText;
-    private bool isOnCooldown = false;
+    public Canvas meleeCooldownCanvas;
+    public TMP_Text meleeCooldownText;
+    private bool meleeOnCooldown = false;
     private float attackCooldown = 1.8f;
     public AudioClip batSwing;
+    public Canvas gunCooldownCanvas;
+    public TMP_Text gunCooldownText;
     private bool canShoot = true;
     public float shootCooldown = 0.5f;
     public float shootRange = 100f;
@@ -50,18 +56,21 @@ public class Inventory : MonoBehaviour
     // 1: Melee, 2: Gun, 3: Food, 4: Stabilizers, 5: Ammo 6: Map
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
+        adsCamera.enabled = false;
         hasMelee = false;
-        hasGun = false;
+        hasGun = true;
         hasMap = false;
         food = 2;
         stabilizers = 0;
-        ammo = 0;
-        normalColor = new Color32(103,103,103,100);
+        ammo = 50;
+        normalColor = new Color32(255,255,110,100);
+        noneColor = new Color32(103,103,103,100);
         highlight = new Color32(0,255,255,100);
         errorColor = Color.red;
-        hotbarSlots = new RectTransform[6];
+        hotbarSlots = new RectTransform[5];
         currentItem = -1;
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 5; i++)
         {
             hotbarSlots[i] = hotbarParent.GetChild(i).GetComponent<RectTransform>();
         }
@@ -98,12 +107,7 @@ public class Inventory : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.M))
         {
             Debug.Log("Pressed M");
-            EquipItem(6);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            Debug.Log("Pressed 6");
-            EquipItem(6);
+            EquipItem(5);
         }
         else if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -112,6 +116,16 @@ public class Inventory : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
             mapDisplay.gameObject.SetActive(false);
+        }
+        else if (Input.GetMouseButtonDown(1) && currentItem == 2)
+        {
+            mainCamera.enabled = false;
+            adsCamera.enabled = true;
+        }
+        else if (Input.GetMouseButtonUp(1)  && currentItem == 2)
+        {
+            mainCamera.enabled = true;
+            adsCamera.enabled = false;
         }
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
@@ -122,7 +136,7 @@ public class Inventory : MonoBehaviour
             Debug.Log("Scroll Down");
             mapDisplay.gameObject.SetActive(false);
 
-            if (currentItem + 1 > 6)
+            if (currentItem + 1 > 5)
             {
                 equip = 1;
             }
@@ -140,7 +154,7 @@ public class Inventory : MonoBehaviour
 
             if (currentItem - 1 < 1)
             {
-                equip = 6;
+                equip = 5;
             } 
             else
             {
@@ -151,14 +165,14 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    IEnumerator AttackCooldownTimer()
+    IEnumerator MeleeAttackCooldownTimer()
     {
-        isOnCooldown = true;
+        meleeOnCooldown = true;
         bat.EnableDamage();
         audioSource.volume = 0.3f;
         audioSource.PlayOneShot(batSwing);
 
-        cooldownCanvas.gameObject.SetActive(true);
+        meleeCooldownCanvas.gameObject.SetActive(true);
         float timeRemaining = attackCooldown;
 
         var image = hotbarSlots[0].GetComponent<Image>();
@@ -168,13 +182,13 @@ public class Inventory : MonoBehaviour
         while (timeRemaining > 0)
         {
             timeRemaining -= Time.deltaTime;
-            cooldownText.text = Mathf.Max(timeRemaining, 0).ToString("F2");
+            meleeCooldownText.text = Mathf.Max(timeRemaining, 0).ToString("F2");
             yield return null;
         }
         if (image != null) image.color = highlight;
 
-        cooldownCanvas.gameObject.SetActive(false);
-        isOnCooldown = false;
+        meleeCooldownCanvas.gameObject.SetActive(false);
+        meleeOnCooldown = false;
         bat.DisableDamage();
     }
 
@@ -189,7 +203,10 @@ public class Inventory : MonoBehaviour
         audioSource.volume = 0.1f;
         audioSource.PlayOneShot(shotSound);
 
-        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        gunCooldownCanvas.gameObject.SetActive(true);
+        float timeRemaining = shootCooldown;
+
+        Ray ray = hitscanCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, shootRange, targetMask))
@@ -203,8 +220,20 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(shootCooldown);
+        var image = hotbarSlots[1].GetComponent<Image>();
 
+        if (image != null) image.color = normalColor;
+
+        while (timeRemaining > 0)
+        {
+            timeRemaining -= Time.deltaTime;
+            gunCooldownText.text = Mathf.Max(timeRemaining, 0).ToString("F2");
+            yield return null;
+        }
+
+        if (image != null) image.color = highlight;
+
+        gunCooldownCanvas.gameObject.SetActive(false);
         canShoot = true;
     }
 
@@ -221,10 +250,10 @@ public class Inventory : MonoBehaviour
         {
             
             case 1:
-                if (hasMelee && !isOnCooldown)
+                if (hasMelee && !meleeOnCooldown)
                 {
                     Debug.Log("Swing");
-                    StartCoroutine(AttackCooldownTimer());
+                    StartCoroutine(MeleeAttackCooldownTimer());
                 }
                 break;
             case 2:
@@ -275,12 +304,6 @@ public class Inventory : MonoBehaviour
                 }
                 break;
             case 5:
-                if (ammo > 0)
-                {
-                    Debug.Log("Ammo Used");
-                }
-                break;
-            case 6:
                 if (hasMap)
                 {
                     mapDisplay.gameObject.SetActive(true);
@@ -341,12 +364,6 @@ public class Inventory : MonoBehaviour
                 }
                 break;
             case 5:
-                if (ammo == 0)
-                {
-                    return false;
-                }
-                break;
-            case 6:
                 if (!hasMap)
                 {
                     return false;
@@ -354,6 +371,33 @@ public class Inventory : MonoBehaviour
                 break;
         }
         return true;
+    }
+
+    public void UpdateImages()
+    {
+        for (int i = 0; i < hotbarSlots.Length; i++)
+        {
+            var image = hotbarSlots[i].GetComponent<Image>();
+
+            if (i == (currentItem))
+            {
+                continue;
+            }
+            else
+            {
+                if (image != null)
+                {
+                    if (hasItem(i + 1))
+                    {
+                        image.color = normalColor;
+                    }
+                    else
+                    {
+                        image.color = noneColor;
+                    }
+                }
+            }
+        }
     }
 
     private IEnumerator FlashRed(RectTransform slot, Image image)
@@ -370,12 +414,12 @@ public class Inventory : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = elapsed / flashDuration;
             
-            image.color = Color.Lerp(errorColor, normalColor, t);
+            image.color = Color.Lerp(errorColor, noneColor, t);
 
             yield return null;
         }
 
-        image.color = normalColor;
+        image.color = noneColor;
     }
 
 
@@ -383,7 +427,7 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < hotbarSlots.Length; i++)
         {
             var image = hotbarSlots[i].GetComponent<Image>();
-
+            
             if (i == (key - 1))
             {
                 if (!hasItem(key))
@@ -395,7 +439,7 @@ public class Inventory : MonoBehaviour
                 if(key == currentItem) // Unequip current item
                 {
                     hotbarSlots[i].localScale = Vector3.one * 1;
-                    if (image != null) image.color = normalColor;
+                    image.color = normalColor;
                     itemsInHand[i].SetActive(false);
                     currentItem = -1;
                 }
@@ -412,7 +456,17 @@ public class Inventory : MonoBehaviour
             else // Reset state of other items
             {
                 hotbarSlots[i].localScale = Vector3.one * 1;
-                if (image != null) image.color = normalColor;
+                if (image != null)
+                {
+                    if (hasItem(i + 1))
+                    {
+                        image.color = normalColor;
+                    }
+                    else
+                    {
+                        image.color = noneColor;
+                    }
+                }
                 itemsInHand[i].SetActive(false);
             }
         }

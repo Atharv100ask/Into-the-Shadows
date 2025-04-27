@@ -12,6 +12,9 @@ public class HealthBar : MonoBehaviour
     public float maxInfection = 100f;  // Max infection amount
     public static float currentInfection = 0f; 
 
+    public AudioSource damageAudioSource;  // Reference to the AudioSource
+    public AudioClip damageSound;  // Reference to the sound clip to play on damage
+
     void Start()
     {
         currentHealth = maxHealth;  // Initialize the health
@@ -24,6 +27,10 @@ public class HealthBar : MonoBehaviour
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);  // Ensure health doesn't go below 0
         UpdateHealthBar();  // Update the health bar
+        if (damageAudioSource != null && damageSound != null)
+        {
+            damageAudioSource.PlayOneShot(damageSound);  // Play the damage sound clip once
+        }
     }
 
     public void StartInfection()

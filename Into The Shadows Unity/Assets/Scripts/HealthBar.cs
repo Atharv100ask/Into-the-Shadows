@@ -8,23 +8,48 @@ public class HealthBar : MonoBehaviour
     public Image infectionBarImage; //infection bar
     public float maxHealth = 100f;
     public float currentHealth;
-    
-    // Infection variables
     public float maxInfection = 100f;  // Max infection amount
-    public 
+
+    [Header("Damage Overlay")]
+    public Image overlay; //DamageOverlay gameobj
+    public float duration;
+    public float fadeSpeed;
+    private float durationTimer;
+    // Infection variables
+    
 
     void Start()
     {
         currentHealth = maxHealth;  // Initialize the health
         UpdateHealthBar();  //Update health bar to match the initial health
         UpdateInfectionBar(0);  //start infection at 0
+        overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 0); //start with no dmg overlay
     }
 
+    void Update()//fade dmg overlay
+    {
+        if (overlay.color.a > 0)
+        {
+            durationTimer += Time.deltaTime;
+            if (durationTimer > duration)
+            {
+                //fade image out
+                float tempAlpha = overlay.color.a;
+                tempAlpha -= Time.deltaTime * fadeSpeed;
+                overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, tempAlpha);
+            }
+        }
+    }
     public void TakeDamage(float damage)//function that will decrease health when button is clicked
     {
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);  // Ensure health doesn't go below 0
         UpdateHealthBar();  // Update the health bar
+
+        //flash damage overlay
+        durationTimer = 0;
+        overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 0.32f);
+        
     }
 
     public void StartInfection()

@@ -102,7 +102,7 @@ public class NPC : MonoBehaviour
             currentState = NPCState.Intro;
             intro = true;
         }
-        else if (HealthBar.currentInfection >= 80f)
+        else if (PlayerInfection.currentInfection >= 80f)
         {
             currentState = NPCState.DialogueFear;
         }
@@ -110,7 +110,7 @@ public class NPC : MonoBehaviour
         {
             currentState = NPCState.DialogueEmpathy;
         }
-        else if (HealthBar.currentInfection >= 50f)
+        else if (PlayerInfection.currentInfection >= 50f)
         {
             currentState = NPCState.DialogueUneasy;
         }

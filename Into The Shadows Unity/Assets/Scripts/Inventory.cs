@@ -51,6 +51,7 @@ public class Inventory : MonoBehaviour
     public float shootRange = 100f;
     public int gunDamage = 50;
     public AudioClip pickupSound;
+    public PlayerInfection PlayerInfection;
 
 
     // 1: Melee, 2: Gun, 3: Food, 4: Stabilizers, 5: Ammo 6: Map
@@ -291,7 +292,7 @@ public class Inventory : MonoBehaviour
                 {
                     PlayConsumableEffects(1);
                     stabilizers--;
-                    if (HealthBar.currentInfection - 35 < 0)
+                    if (PlayerInfection.currentInfection - 35 < 0)
                     {
                         status.UpdateInfectionBar(0);
                     }

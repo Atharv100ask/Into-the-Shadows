@@ -8,7 +8,7 @@ public class LightingManager : MonoBehaviour
 
     [Header("Infection Settings")]
     public float infectionRate = 2.0f;         // Infection increase per second in sunlight
-    public static float currentInfection = 0f;      // Optional: track infection over time
+    //public float currentInfection = 0f;      // Optional: track infection over time
     public float maxInfection = 100f;
 
     [Header("Raycast Settings")]
@@ -19,14 +19,8 @@ public class LightingManager : MonoBehaviour
     {
         if (IsInDirectSunlight())
         {
-            // Increase infection over time
-            // currentInfection += infectionRate * Time.deltaTime;
-            // currentInfection = Mathf.Clamp(currentInfection, 0, maxInfection);
             PlayerInfection.IncreaseInfection(infectionRate * Time.deltaTime);
         }
-
-        // Debug info
-        // Debug.Log("Infection Level: " + currentInfection);
     }
 
     bool IsInDirectSunlight()

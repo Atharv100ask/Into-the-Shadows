@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
+    public PlayerInfection PlayerInfection;
     public Image healthBarImage; //health bar
     public Image infectionBarImage; //infection bar
     public float maxHealth = 100f;
@@ -10,7 +11,7 @@ public class HealthBar : MonoBehaviour
     
     // Infection variables
     public float maxInfection = 100f;  // Max infection amount
-    public static float currentInfection = 0f; 
+    public 
 
     void Start()
     {
@@ -28,21 +29,21 @@ public class HealthBar : MonoBehaviour
 
     public void StartInfection()
     {
-        // currentInfection += 10f;  //
-        // currentInfection = Mathf.Clamp(currentInfection, 0f, maxInfection);  
+        // PlayerInfection.currentInfection += 10f;  //
+        // PlayerInfection.currentInfection = Mathf.Clamp(PlayerInfection.currentInfection, 0f, maxInfection);  
 
-        // if (currentInfection >= maxInfection)
+        // if (PlayerInfection.currentInfection >= maxInfection)
         // {
         //     ApplyInfectionDamage();//applies infection damage
         // }
 
-        // UpdateInfectionBar(currentInfection);//updates infection bar filling
+        // UpdateInfectionBar(PlayerInfection.currentInfection);//updates infection bar filling
     }
 
     public void StopInfection()
     {
-        currentInfection = 0f;
-        UpdateInfectionBar((int)currentInfection);//fixes filling to empty
+        PlayerInfection.currentInfection = 0f;
+        UpdateInfectionBar((int)PlayerInfection.currentInfection);//fixes filling to empty
     }
 
     public void UpdateHealthBar()
@@ -55,7 +56,7 @@ public class HealthBar : MonoBehaviour
     public void UpdateInfectionBar(float infection)
     {
         // Set the fill amount based on current infection
-        //PlayerInfection.currentInfection = infection;
+        //PlayerInfection.PlayerInfection.currentInfection = infection;
         infectionBarImage.fillAmount =  infection / maxInfection;
     }
 

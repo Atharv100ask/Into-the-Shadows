@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce = 200f;
     public float sprintMultiplier = 1.3f;
     public float strafeMultiplier = 0.6f;
+    public float backwardMultiplier = 0.7f;
 
     public static bool isGrounded = true;
     //camera movement variables
@@ -19,10 +20,6 @@ public class PlayerMovement : MonoBehaviour
     public float sensitivity_horiz = 4f;
     float xRotation = 0f;
     float yRotation = 0f;
-    //[SerializeField]
-    //private GameObject spawnedPrefab;
-    // save the instantiated prefab
-    //private GameObject instantiatedPrefab;
 
     // reference to the camera audio listener
     [SerializeField] private AudioListener audioListener;
@@ -32,6 +29,14 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody rb;
     Transform t;
     public PlayerInfection PlayerInfection;
+    //sprint fov
+    [Header("FOV Settings")]
+    public float normalFOV = 60f;
+    public float sprintFOV = 75f;
+    public float fovSmoothSpeed = 8f;
+    public float CameraRangeUp = -50f;
+    public float CameraRangeDown = 9f;
+
 
     // Start is called before the first frame update
     void Start()
@@ -82,7 +87,15 @@ public class PlayerMovement : MonoBehaviour
             }
 
             // Multiply by custom speed per direction
-            Vector3 forwardMove = transform.forward * forwardInput * currentSpeed;
+            float appliedForwardSpeed = currentSpeed;
+            //back walk slow
+            if (forwardInput < 0)
+            {
+                appliedForwardSpeed *= backwardMultiplier;
+            }
+
+            Vector3 forwardMove = transform.forward * forwardInput * appliedForwardSpeed;
+
             Vector3 strafeMove = transform.right * strafeInput * (currentSpeed * strafeMultiplier); //strafe speed decrease
 
             Vector3 totalMove = forwardMove + strafeMove;
@@ -106,11 +119,16 @@ public class PlayerMovement : MonoBehaviour
 
             yRotation += mouseX;
             xRotation -= mouseY; //up and down cursor movement, rotation of the cam along x axis
-            xRotation = Mathf.Clamp(xRotation, -50f, 9f);
+            xRotation = Mathf.Clamp(xRotation, CameraRangeUp, CameraRangeDown);
 
             transform.rotation = Quaternion.Euler(0f, yRotation, 0f);
             playerCamera.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         }
+
+        // Sprint FOV effect
+        float targetFOV = Input.GetKey(KeyCode.LeftShift) ? sprintFOV : normalFOV;
+        playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, Time.deltaTime * fovSmoothSpeed);
+
     }
 
     //check if touching ground

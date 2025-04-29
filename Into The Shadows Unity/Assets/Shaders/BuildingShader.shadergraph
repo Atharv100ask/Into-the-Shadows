@@ -23,6 +23,12 @@
         },
         {
             "m_Id": "2eb914327f314438aed3792ed09f52e4"
+        },
+        {
+            "m_Id": "687bfcff2975412daff5b7c177ca532f"
+        },
+        {
+            "m_Id": "2fa92cb1ce2d4275b07336ff54ded8fd"
         }
     ],
     "m_Keywords": [],
@@ -699,6 +705,34 @@
 }
 
 {
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "2fa92cb1ce2d4275b07336ff54ded8fd",
+    "m_Guid": {
+        "m_GuidSerialized": "ba5cf523-ea77-458a-a339-1047be3f54a1"
+    },
+    "m_Name": "Smoothness",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Smoothness",
+    "m_DefaultReferenceName": "_Smoothness",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": 0.20000000298023225,
+    "m_FloatType": 0,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
+    }
+}
+
+{
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
     "m_ObjectId": "32e6f6321fb34f35910ca02ee78b937e",
@@ -1329,6 +1363,34 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": 1.0,
+    "m_FloatType": 0,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
+    }
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "687bfcff2975412daff5b7c177ca532f",
+    "m_Guid": {
+        "m_GuidSerialized": "2ebaa881-17b3-44d1-8d69-65de37cff9d3"
+    },
+    "m_Name": "Metallic",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Metallic",
+    "m_DefaultReferenceName": "_Metallic",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": 0.0,
     "m_FloatType": 0,
     "m_RangeValues": {
         "x": 0.0,
@@ -2180,6 +2242,12 @@
         },
         {
             "m_Id": "2eb914327f314438aed3792ed09f52e4"
+        },
+        {
+            "m_Id": "687bfcff2975412daff5b7c177ca532f"
+        },
+        {
+            "m_Id": "2fa92cb1ce2d4275b07336ff54ded8fd"
         }
     ]
 }

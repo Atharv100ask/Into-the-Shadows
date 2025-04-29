@@ -41,7 +41,7 @@ public class Inventory : MonoBehaviour
     public int currentItem;
     public Canvas meleeCooldownCanvas;
     public TMP_Text meleeCooldownText;
-    private bool meleeOnCooldown = false;
+    public bool meleeOnCooldown = false;
     private float attackCooldown = 1.8f;
     public AudioClip batSwing;
     public Canvas gunCooldownCanvas;

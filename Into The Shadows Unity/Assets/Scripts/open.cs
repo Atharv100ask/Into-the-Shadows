@@ -6,6 +6,7 @@ public class open : MonoBehaviour
 
     public void HidePanel()
     {
+        Debug.Log("Check"); 
         if (panelToOpen != null)
         {
             panelToOpen.SetActive(true);

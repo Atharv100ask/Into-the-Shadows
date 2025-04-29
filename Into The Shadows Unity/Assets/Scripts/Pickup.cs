@@ -5,9 +5,21 @@ public class Pickup : MonoBehaviour
 
     public HealthBar status;
     public Inventory inventory;
+    public NPC npcReference;
+    public Animator npcAnim;
     private void OnCollisionEnter (Collision collision)
     {
         Destroy(gameObject);
+
+        if(gameObject.tag == "Side1")
+        {
+            Debug.Log("Side 1 done");
+            npcAnim.SetBool("Dead", true);
+            Destroy(npcReference);
+            Collider col = npcReference.GetComponent<Collider>();
+            if (col != null) col.enabled = false;
+            return;
+        }
 
         if(gameObject.tag == "Food")
         {

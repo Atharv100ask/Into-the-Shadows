@@ -10,10 +10,13 @@ public enum NPCState {
     DialogueNeutral,
     Intro
 }
-
+public enum NPCType { 
+    StartNPC,
+    Side1NPC,
+    Side2NPC,
+}
 public class NPC : MonoBehaviour
 {
-    public DialogueUI dialogue;
     private bool isPlayerNearby = false;
     private Transform nearbyPlayer;
     public HealthBar status;
@@ -23,7 +26,8 @@ public class NPC : MonoBehaviour
     public Canvas tooltip;
     public bool intro;
     public Inventory inventory;
-
+    public NPCType npcType;
+    private int stage = 0;
 
     private bool hasGivenItem = false;
     private bool respondedToItemUse = false;
@@ -40,11 +44,10 @@ public class NPC : MonoBehaviour
 
         if (isPlayerNearby)
         {
-            Debug.Log("Near");
             Vector3 targetDirection = nearbyPlayer.position - transform.position;
             targetDirection.y = 0;
 
-            if (targetDirection != Vector3.zero)
+            if (targetDirection != Vector3.zero && npcType == NPCType.StartNPC)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
@@ -54,6 +57,7 @@ public class NPC : MonoBehaviour
             
             if (Input.GetKeyDown(KeyCode.E))
             {
+
                 Debug.Log("Hovered and Pressed E");
                 UpdateStateBasedOnPlayer();
             }
@@ -62,7 +66,6 @@ public class NPC : MonoBehaviour
         else
         {
             tooltip.enabled = false;
-            currentState = NPCState.Idle;
         }
         
     }
@@ -84,19 +87,10 @@ public class NPC : MonoBehaviour
         {
             isPlayerNearby = false;
             nearbyPlayer = null;
-            currentState = NPCState.Idle;
         }
     }
 
-    void UpdateStateBasedOnPlayer()
-    {
-        if(nearbyPlayer == null){
-            Debug.Log("Player missing error");
-        }
-        else if(status == null){
-            Debug.Log("Status missing error");
-        }
-
+    void StartNPCState(){
         if(!intro)
         {
             currentState = NPCState.Intro;
@@ -123,8 +117,65 @@ public class NPC : MonoBehaviour
         {
             currentState = NPCState.DialogueNeutral;
         }
-        HandleAnimations();
-        HandleDialogue();
+    }
+
+    void UpdateStateBasedOnPlayer()
+    {
+        if(nearbyPlayer == null){
+            Debug.Log("Player missing error");
+            return;
+        }
+        else if(status == null){
+            Debug.Log("Status missing error");
+            return;
+        }
+
+        if (npcType == NPCType.StartNPC)
+        {
+            StartNPCState();
+            HandleAnimations();
+            HandleDialogue();
+        }
+        else if (npcType == NPCType.Side1NPC)
+        {
+            Debug.Log(stage);
+            switch (stage)
+            {
+                case 0:
+                    ShowDialogue("Holy shit, you aren't a zombie? Did you get past the ones on the street earlier?");
+                    stage += 1;
+                    break;
+                case 1:
+                    ShowDialogue("Hey, I've got a favor to ask of you. Would you hear me out?");
+                    stage += 1;
+                    break;
+                case 2:
+                    ShowDialogue("I got separated from my son, Bobby, and I need to make sure he is okay. He should be in " +
+                    "the building at the end of the street past the military truck bloackade you just passed.");
+                    stage += 1;
+                    break;
+                case 3:
+                    ShowDialogue("If you keep heading forward along the path on that map of yours, it should be the third blue building marked. " +
+                    "Please, can you find my son? It might be too late for me, but he should live on. There are food supplies in that building you can take too.");
+                    stage += 1;
+                    break;
+                case 4:
+                    ShowDialogue("Please find my son, I beg you.");
+                    break;
+                
+            }
+        }
+        else if (npcType == NPCType.Side2NPC)
+        {
+            if (stage > 2)
+            {
+                ShowDialogue("You were too late. Bobby is dead.");
+                stage = -1;
+                return;
+            }
+            ShowDialogue("This poor child was eaten alive.");
+        }
+        
     }
 
     void HandleDialogue()
@@ -236,11 +287,14 @@ public class NPC : MonoBehaviour
         animator.SetBool("Neutral", false);
     }
 
-
-
     void ShowDialogue(string text)
     {
-        dialogue.ShowDialogue(text);
+        if (DialogueUI.Instance == null)
+    {
+        Debug.LogError("DialogueUI.Instance is null!");
+        return;
+    }
+        DialogueUI.Instance.ShowDialogue(text);
     }
 
     void GiveHealingItem(Transform player)
@@ -248,6 +302,8 @@ public class NPC : MonoBehaviour
         hasGivenItem = true;
         Debug.Log("NPC gave healing item");
         // Inventory logic to be implemented
-        // player.GetComponent<PlayerInventory>().AddItem("HealingKit");
+        inventory.food += 1;
+        inventory.UpdateItemCount();
+        inventory.UpdateImages();
     }
 }

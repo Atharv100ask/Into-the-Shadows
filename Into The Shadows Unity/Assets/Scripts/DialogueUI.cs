@@ -5,11 +5,15 @@ using TMPro;
 public class DialogueUI : MonoBehaviour
 {
 
+    public static DialogueUI Instance;
     public GameObject dialoguePanel;
     public TMP_Text dialogueText;
 
     private void Awake()
     {
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
+
         dialoguePanel.SetActive(false);
     }
     
@@ -17,6 +21,7 @@ public class DialogueUI : MonoBehaviour
     {
         if (dialoguePanel.activeSelf && Input.GetKeyDown(KeyCode.Escape))//if dialogue is active we can use esc to hide it
         {
+            Debug.Log("Check");
             HideDialogue();
         }
     }
@@ -24,6 +29,7 @@ public class DialogueUI : MonoBehaviour
 
     public void ShowDialogue(string message)
     {
+        Debug.Log("Showing dialogue: " + message); // Add this
         dialoguePanel.SetActive(true);
         dialogueText.text = message;
     }

@@ -13,6 +13,9 @@ TagManager:
   - Food
   - Syringe
   - Zombie
+  - StartNPC
+  - Side1NPC
+  - Side1
   layers:
   - Default
   - TransparentFX

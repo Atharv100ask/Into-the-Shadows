@@ -51,7 +51,7 @@ public class PlayerAnimation : MonoBehaviour {
             anim.SetBool("hasGun", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0) && inventory.currentItem == 1)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && inventory.currentItem == 1 && !inventory.meleeOnCooldown)
         {
             StartCoroutine(WaitForSwingThenReset());
         }

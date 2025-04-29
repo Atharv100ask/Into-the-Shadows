@@ -18,6 +18,9 @@ public class HealthBar : MonoBehaviour
     // Infection variables
     
 
+    public AudioSource damageAudioSource;  // Reference to the AudioSource
+    public AudioClip damageSound;  // Reference to the sound clip to play on damage
+
     void Start()
     {
         currentHealth = maxHealth;  // Initialize the health
@@ -50,6 +53,10 @@ public class HealthBar : MonoBehaviour
         durationTimer = 0;
         overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 0.32f);
         
+        if (damageAudioSource != null && damageSound != null)
+        {
+            damageAudioSource.PlayOneShot(damageSound);  // Play the damage sound clip once
+        }
     }
 
     public void StartInfection()

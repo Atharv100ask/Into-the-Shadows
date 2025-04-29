@@ -23,28 +23,28 @@ public class Flicker : MonoBehaviour
         {
             flickerAudio.Play();
         }
-
-        StartCoroutine(FlickerRoutine());
-    }
-
-    IEnumerator FlickerRoutine()
-    {
-        float startTime = Time.time;
-
-        while (Time.time - startTime < flickerDuration)
-        {
-            splashImage.enabled = !splashImage.enabled;
-            yield return new WaitForSeconds(flickerInterval);
-        }
-
-        splashImage.enabled = true;
         playButton.SetActive(true);
-
-        if (flickerAudio != null)
-        {
-            flickerAudio.Stop();
-        }
+        // StartCoroutine(FlickerRoutine());
     }
+
+    // IEnumerator FlickerRoutine()
+    // {
+    //     // float startTime = Time.time;
+
+    //     // while (Time.time - startTime < flickerDuration)
+    //     // {
+    //     //     splashImage.enabled = !splashImage.enabled;
+    //     //     yield return new WaitForSeconds(flickerInterval);
+    //     // }
+
+    //     // splashImage.enabled = true;
+    //     playButton.SetActive(true);
+
+    //     if (flickerAudio != null)
+    //     {
+    //         flickerAudio.Stop();
+    //     }
+    // }
 
     public void OnPlayButtonClicked()
     {

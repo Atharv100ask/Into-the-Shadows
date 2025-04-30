@@ -50,6 +50,8 @@ public class PlayerMovement : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked; //cursor lock to window
         Cursor.visible = false;
+        PlayerInfection.gameOver = false;
+        isPaused = false;
 
     }
 
@@ -60,22 +62,23 @@ public class PlayerMovement : MonoBehaviour
         Vector3 moveDirection = Vector3.zero;
 
         // Lock/Unlock cursor if Escape is pressed
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !PlayerInfection.gameOver)
         {
-            if (!isPaused)
-            {
-                // Pause the game
-                isPaused = true;
-                canControl = false;
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-                pauseMenuPanel.SetActive(true);
-                Time.timeScale = 0f; // freeze time
-            }
-            else
-            {
-                ResumeGame();
-            }
+                if (!isPaused)
+                {
+                    // Pause the game
+                    isPaused = true;
+                    canControl = false;
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+                    pauseMenuPanel.SetActive(true);
+                    Time.timeScale = 0f; // freeze time
+                }
+                else
+                {
+                    ResumeGame();
+                }
+            
         }
 
 
@@ -125,7 +128,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Camera movement
-        if (PlayerInfection.gameOverText.enabled == false && !isPaused)
+        if (PlayerInfection.gameOver == false && !isPaused)
         {
             float mouseX = Input.GetAxis("Mouse X") * sensitivity_horiz;
             float mouseY = Input.GetAxis("Mouse Y") * sensitivity_vert;

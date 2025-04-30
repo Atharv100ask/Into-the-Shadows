@@ -114,7 +114,7 @@ public class Inventory : MonoBehaviour
         {
             UseItem();
         }
-        else if (Input.GetKeyDown(KeyCode.Escape))
+        else if (Input.GetKeyDown(KeyCode.Return))
         {
             mapDisplay.gameObject.SetActive(false);
         }

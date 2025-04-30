@@ -48,7 +48,11 @@ public class HealthBar : MonoBehaviour
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);  // Ensure health doesn't go below 0
         UpdateHealthBar();  // Update the health bar
-
+        if (currentHealth <= 0f)
+        {
+            StopInfection();  //Stop the infection when the player dies
+            PlayerInfection.TriggerGameOver();
+        }
         //flash damage overlay
         durationTimer = 0;
         overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 0.32f);
@@ -101,7 +105,7 @@ public class HealthBar : MonoBehaviour
         if (currentHealth <= 0f)
         {
             StopInfection();  //Stop the infection when the player dies
-           
+            PlayerInfection.TriggerGameOver();
         }
     }
 }

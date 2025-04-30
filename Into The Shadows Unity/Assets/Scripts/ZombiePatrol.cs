@@ -31,7 +31,7 @@ public class ZombiePatrol : MonoBehaviour
     {
         Time.timeScale = 1f; 
         agent = GetComponent<NavMeshAgent>();
-        agent.stoppingDistance = 1.3f;//distance to stop from player
+        agent.stoppingDistance = 1.0f;//distance to stop from player
         anim = GetComponent<Animator>(); //gets animation components
         agent.speed = patrolSpeed;
 

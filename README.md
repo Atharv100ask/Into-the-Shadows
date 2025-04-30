@@ -1,4 +1,6 @@
 Design Document: https://docs.google.com/document/d/11-whKk_-YXsfpUOFhhTdsZ2soEV-NOZ_rrI_nBf3cGA/edit?usp=sharing 
+How to play game: You must try to find the cure located in a building. Talk to the NPC at the start to get a map and use weapons already given to get through zombies. Avoid the sunlight or you will turn into a zombie and lose. 
+
 Assignment - 6 
 Updated level design:
 Added pathway AI zombies with Mechanium body in our city to patrol around certain areas and once you get close they start to attack you. (Alejandro)
@@ -27,3 +29,6 @@ We added multiple sounds like bg music for the intro scene, splash scene, and cr
 Assignment 8:
 Updated level design - Added melee weapon on floor, Updated credit scenes. Added 3 different shaders one for obstacles, weapons/consumables, and other for buildings. Updated zombies to get hit reaction and now lose health from bat. Fixed city colliders. Added a new city. Added zombie hordes to the new city and placed cure. Added map to guide users.
 
+
+Assignment 9:
+Updated level design - Added visuals for when getting hit for zombies and sound effects, added visuals when in sun that increases infection level, added more NPC that tell a story, added guns and more consumables in buildings, updated changes to player camera and settings/control screen. Modified zombies to be able to get close enough to get hit. 

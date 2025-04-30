@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public bool canControl = true;
+    public GameObject pauseMenuPanel;
+    private bool isPaused = false;
 
     //movement variables
     public float speed = 3.0f;
@@ -60,17 +62,22 @@ public class PlayerMovement : MonoBehaviour
         // Lock/Unlock cursor if Escape is pressed
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (Cursor.lockState == CursorLockMode.Locked)
+            if (!isPaused)
             {
+                // Pause the game
+                isPaused = true;
+                canControl = false;
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
+                pauseMenuPanel.SetActive(true);
+                Time.timeScale = 0f; // freeze time
             }
             else
             {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                ResumeGame();
             }
         }
+
 
         if (canControl)
         {
@@ -118,7 +125,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Camera movement
-        if (PlayerInfection.gameOverText.enabled == false)
+        if (PlayerInfection.gameOverText.enabled == false && !isPaused)
         {
             float mouseX = Input.GetAxis("Mouse X") * sensitivity_horiz;
             float mouseY = Input.GetAxis("Mouse Y") * sensitivity_vert;
@@ -136,6 +143,15 @@ public class PlayerMovement : MonoBehaviour
         playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, Time.deltaTime * fovSmoothSpeed);
     }
 
+    public void ResumeGame()
+    {
+        isPaused = false;
+        canControl = true;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        pauseMenuPanel.SetActive(false);
+        Time.timeScale = 1f;
+    }
 
     //check if touching ground
     public void OnCollisionEnter(Collision collision)

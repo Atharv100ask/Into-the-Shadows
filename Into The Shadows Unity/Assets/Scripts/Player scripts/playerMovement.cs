@@ -5,6 +5,10 @@ using UnityEngine;
 // MonoBehavior is the base class from which every Unity Script Derives
 public class PlayerMovement : MonoBehaviour
 {
+    public bool canControl = true;
+    public GameObject pauseMenuPanel;
+    private bool isPaused = false;
+
     //movement variables
     public float speed = 3.0f;
     //public float rotationSpeed = 70;
@@ -43,7 +47,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         t = GetComponent<Transform>();
-        
+
         Cursor.lockState = CursorLockMode.Locked; //cursor lock to window
         Cursor.visible = false;
 
@@ -52,67 +56,76 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         Vector3 moveDirection = Vector3.zero;
 
         // Lock/Unlock cursor if Escape is pressed
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (Cursor.lockState == CursorLockMode.Locked)
+            if (!isPaused)
             {
+                // Pause the game
+                isPaused = true;
+                canControl = false;
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
+                pauseMenuPanel.SetActive(true);
+                Time.timeScale = 0f; // freeze time
             }
             else
             {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                ResumeGame();
             }
         }
 
-        if (isGrounded) //player can only move when touching ground
+
+        if (canControl)
         {
-            float forwardInput = 0f;
-            float strafeInput = 0f;
-
-            if (Input.GetKey(KeyCode.W)) forwardInput += 1f;
-            if (Input.GetKey(KeyCode.S)) forwardInput -= 1f;
-            if (Input.GetKey(KeyCode.D)) strafeInput += 1f;
-            if (Input.GetKey(KeyCode.A)) strafeInput -= 1f;
-
-            // Determine if sprinting
-            float currentSpeed = speed;
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (isGrounded) //player can only move when touching ground
             {
-                currentSpeed *= sprintMultiplier; //sprint speed increase
+                float forwardInput = 0f;
+                float strafeInput = 0f;
+
+                if (Input.GetKey(KeyCode.W)) forwardInput += 1f;
+                if (Input.GetKey(KeyCode.S)) forwardInput -= 1f;
+                if (Input.GetKey(KeyCode.D)) strafeInput += 1f;
+                if (Input.GetKey(KeyCode.A)) strafeInput -= 1f;
+
+                // Determine if sprinting
+                float currentSpeed = speed;
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    currentSpeed *= sprintMultiplier; //sprint speed increase
+                }
+
+                // Multiply by custom speed per direction
+                float appliedForwardSpeed = currentSpeed;
+                //back walk slow
+                if (forwardInput < 0)
+                {
+                    appliedForwardSpeed *= backwardMultiplier;
+                }
+
+                Vector3 forwardMove = transform.forward * forwardInput * appliedForwardSpeed;
+
+                Vector3 strafeMove = transform.right * strafeInput * (currentSpeed * strafeMultiplier); //strafe speed decrease
+
+                Vector3 totalMove = forwardMove + strafeMove;
+                rb.linearVelocity = new Vector3(totalMove.x, rb.linearVelocity.y, totalMove.z);
+
+
             }
 
-            // Multiply by custom speed per direction
-            float appliedForwardSpeed = currentSpeed;
-            //back walk slow
-            if (forwardInput < 0)
+
+            if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
             {
-                appliedForwardSpeed *= backwardMultiplier;
+                rb.AddForce(t.up * jumpForce);
+                isGrounded = false;
             }
-
-            Vector3 forwardMove = transform.forward * forwardInput * appliedForwardSpeed;
-
-            Vector3 strafeMove = transform.right * strafeInput * (currentSpeed * strafeMultiplier); //strafe speed decrease
-
-            Vector3 totalMove = forwardMove + strafeMove;
-            rb.linearVelocity = new Vector3(totalMove.x, rb.linearVelocity.y, totalMove.z);
-
-
-        }
-
-
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-        {
-            rb.AddForce(t.up * jumpForce);
-            isGrounded = false;
         }
 
         // Camera movement
-        if (PlayerInfection.gameOverText.enabled == false)
+        if (PlayerInfection.gameOverText.enabled == false && !isPaused)
         {
             float mouseX = Input.GetAxis("Mouse X") * sensitivity_horiz;
             float mouseY = Input.GetAxis("Mouse Y") * sensitivity_vert;
@@ -128,15 +141,26 @@ public class PlayerMovement : MonoBehaviour
         // Sprint FOV effect
         float targetFOV = Input.GetKey(KeyCode.LeftShift) ? sprintFOV : normalFOV;
         playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, Time.deltaTime * fovSmoothSpeed);
+    }
 
+    public void ResumeGame()
+    {
+        isPaused = false;
+        canControl = true;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        pauseMenuPanel.SetActive(false);
+        Time.timeScale = 1f;
     }
 
     //check if touching ground
-    private void OnCollisionEnter(Collision collision)
+    public void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
         }
     }
+
+    
 }

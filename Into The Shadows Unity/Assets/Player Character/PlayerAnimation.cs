@@ -1,14 +1,19 @@
 using UnityEngine;
-using System;
 using System.Collections;
 
-public class PlayerAnimation : MonoBehaviour {
+public class PlayerAnimation : MonoBehaviour
+{
+    public PlayerInfection PlayerInfection;
+    public PlayerMovement PlayerMovement;
+    public float agonyDuration = 2.7f;
     private Animator anim;
-    private float moveInputX;   // Variable to store input from movement keys
+    private float moveInputX;
     private float moveInputY;
     public Inventory inventory;
-    void Start() {
-        // Get an instance of the Animator component attached to the character.
+    private int lastAgonyTrigger = 0;
+
+    void Start()
+    {
         anim = GetComponent<Animator>();
     }
 
@@ -17,16 +22,17 @@ public class PlayerAnimation : MonoBehaviour {
         anim.SetBool("Swing", true);
 
         yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Swing"));
-
         yield return new WaitWhile(() => anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f);
 
         anim.SetBool("Swing", false);
     }
 
-    void Update() {
-        moveInputX = Input.GetAxisRaw("Horizontal"); // A/D or Left/Right Arrow keys
-        moveInputY = Input.GetAxisRaw("Vertical");   // W/S or Up/Down Arrow keys
+    void Update()
+    {
+        moveInputX = Input.GetAxisRaw("Horizontal");
+        moveInputY = Input.GetAxisRaw("Vertical");
 
+        // Set weapon state
         if (inventory.currentItem == 1)
         {
             anim.SetBool("hasMelee", true);
@@ -39,7 +45,8 @@ public class PlayerAnimation : MonoBehaviour {
             anim.SetBool("hasGun", true);
             anim.SetBool("hasConsumable", false);
         }
-        else if (inventory.currentItem == 3 || inventory.currentItem == 4 || inventory.currentItem == 5){
+        else if (inventory.currentItem == 3 || inventory.currentItem == 4 || inventory.currentItem == 5)
+        {
             anim.SetBool("hasMelee", false);
             anim.SetBool("hasGun", false);
             anim.SetBool("hasConsumable", true);
@@ -47,8 +54,8 @@ public class PlayerAnimation : MonoBehaviour {
         else
         {
             anim.SetBool("hasMelee", false);
-            anim.SetBool("hasConsumable", false);
             anim.SetBool("hasGun", false);
+            anim.SetBool("hasConsumable", false);
         }
 
         if (Input.GetKeyDown(KeyCode.Mouse0) && inventory.currentItem == 1 && !inventory.meleeOnCooldown)
@@ -56,47 +63,47 @@ public class PlayerAnimation : MonoBehaviour {
             StartCoroutine(WaitForSwingThenReset());
         }
 
-        // Check if there's any movement in either axis (left/right or forward/backward)
-        if ((moveInputY != 0))
-        {  
-            anim.SetBool("isRunning", true);
-        }
-        else
-        {
-            anim.SetBool("isRunning", false); // Transition back to idle
-        }
-        //StrafeLeft
-        if (moveInputX < -0.1f)
-        {  
-            anim.SetBool("StrafeLeft", true);
-        }
-        else
-        {
-            anim.SetBool("StrafeLeft", false); // Transition back to idle
-        }
-        //StrafeRight
-        if (moveInputX > 0.1f)
-        {  
-            anim.SetBool("StrafeRight", true);
-        }
-        else
-        {
-            anim.SetBool("StrafeRight", false); // Transition back to idle
-        }
-        //jumping
-        if (Input.GetKeyDown(KeyCode.Space) == true&& (PlayerMovement.isGrounded == true))
+        // Movement animations
+        anim.SetBool("isRunning", moveInputY != 0);
+        anim.SetBool("StrafeLeft", moveInputX < -0.1f);
+        anim.SetBool("StrafeRight", moveInputX > 0.1f);
+
+        // Jumping
+        if (Input.GetKeyDown(KeyCode.Space) && PlayerMovement.isGrounded)
         {
             anim.SetTrigger("isJumping");
         }
-        
-        // if((HealthBar.currentInfection > 9) && (Math.Abs(HealthBar.currentInfection % 10) < 0.0001f))
-        // {
-        //     anim.SetTrigger("infection_10");
-        // }
 
-        // if(Math.Abs(HealthBar.currentInfection - 75) < 0.0001f)
-        // {
-        //     anim.SetTrigger("infection_75");
-        // }
+        // Infection-based agony trigger
+        if ((int)PlayerInfection.currentInfection / 10 > lastAgonyTrigger)
+        {
+            lastAgonyTrigger = (int)PlayerInfection.currentInfection / 10;
+
+            if (anim != null)
+            {
+                anim.SetTrigger("infection_10");
+            }
+
+            if (PlayerMovement != null)
+            {
+                PlayerMovement.canControl = false;
+                StartCoroutine(WaitForAgonyToFinish());
+            }
+             // Start coroutine to re-enable control
+            
+        }
+
+        //DO NOT re-enable control here! Leave that to EndAgony().
     }
+
+    private IEnumerator WaitForAgonyToFinish()
+{
+    yield return new WaitForSeconds(agonyDuration); // Replace with your animation length in seconds
+
+    if (PlayerMovement != null)
+    {
+        PlayerMovement.canControl = true;
+    }
+}
+
 }

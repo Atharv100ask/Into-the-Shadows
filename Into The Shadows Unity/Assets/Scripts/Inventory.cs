@@ -60,11 +60,11 @@ public class Inventory : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         adsCamera.enabled = false;
         hasMelee = false;
-        hasGun = true;
+        hasGun = false;
         hasMap = false;
         food = 2;
         stabilizers = 0;
-        ammo = 50;
+        ammo = 0;
         normalColor = new Color32(255,255,110,100);
         noneColor = new Color32(103,103,103,100);
         highlight = new Color32(0,255,255,100);

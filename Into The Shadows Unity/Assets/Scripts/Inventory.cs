@@ -52,6 +52,7 @@ public class Inventory : MonoBehaviour
     public int gunDamage = 50;
     public AudioClip pickupSound;
     public PlayerInfection PlayerInfection;
+    public GameObject crosshair;
 
 
     // 1: Melee, 2: Gun, 3: Food, 4: Stabilizers, 5: Ammo 6: Map
@@ -80,6 +81,15 @@ public class Inventory : MonoBehaviour
 
     void Update()
     {
+        if(currentItem == 2)
+        {
+            crosshair.SetActive(true);
+        }
+        else
+        {
+            crosshair.SetActive(false);
+        }
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             Debug.Log("Pressed 1");
@@ -114,7 +124,7 @@ public class Inventory : MonoBehaviour
         {
             UseItem();
         }
-        else if (Input.GetKeyDown(KeyCode.Escape))
+        else if (Input.GetKeyDown(KeyCode.Return))
         {
             mapDisplay.gameObject.SetActive(false);
         }

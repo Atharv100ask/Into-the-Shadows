@@ -187,6 +187,7 @@ public class NPC : MonoBehaviour
                 "I heard there's a cure in this town, but there's no way I'm leaving this building. Take this map and grab that bat " +
                 "if you want to try your luck. Take care.");
                 inventory.hasMap = true;
+                inventory.UpdateImages();
                 break;
             case NPCState.DialogueFear:
                 ShowDialogue("Hey are you infected!? Stay away from me!");

@@ -10,6 +10,7 @@ public class MissionCompleteTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // Check if the player is the one that collided with the trigger
+        Debug.Log("Check");
         if (other.CompareTag("Player"))  // Ensure the player has the "Player" tag
         {
             // Show "Mission Complete" text in the UI

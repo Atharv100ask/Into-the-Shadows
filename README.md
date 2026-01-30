@@ -1,34 +1,125 @@
-Design Document: https://docs.google.com/document/d/11-whKk_-YXsfpUOFhhTdsZ2soEV-NOZ_rrI_nBf3cGA/edit?usp=sharing 
-How to play game: You must try to find the cure located in a building. Talk to the NPC at the start to get a map and use weapons already given to get through zombies. Avoid the sunlight or you will turn into a zombie and lose. 
+# Into The Shadows
 
-Assignment - 6 
-Updated level design:
-Added pathway AI zombies with Mechanium body in our city to patrol around certain areas and once you get close they start to attack you. (Alejandro)
-Added red area light around zombies to signify danger.
-Added physics to the road to move faster when near zombies. 
-NPC with FSM and AI pathfinding (a* algorithm) to either follow Player or help locate Food items (Atharv)
+Into The Shadows is a third-person survival horror game set in a dystopian city overrun by zombies. Sunlight carries harmful radiation that gradually infects the player, forcing careful movement through shadows while managing resources, avoiding or fighting zombies, and ultimately locating the cure before complete infection.
 
+---
 
-Updated character design:
-Added zombie with 3 animations(idle walk, scream, and run) (Alejandro)
-Changed starting player with 4 animations(idle, running, agony, and writhing in pain). (Atharv)
-Added tutorial player with idle animation. (Hieu)
-Tutorial player has dialogue pop up based on user state using FSM (Hieu)
-Updated physics:
-Fog is part of 3D physics.
-Doors implemented used the joint constructs.
-Added road where you can run faster(no friction) where zombies are at.
-Updated lights: 
-Red area light near zombies to signify danger.
+## Game Overview
 
+- **Genre:** Survival Horror / Action  
+- **Perspective:** Third-person  
+- **Platform:** PC  
+- **Engine:** Unity  
+- **Version Control:** GitHub  
+- **Issue Tracking:** GitHub Issues  
 
-Assignment 7: 
-Updated level design.
-We added multiple sounds like bg music for the intro scene, splash scene, and credit scene. Zombies have modified sound effects to scream when near you and zombie chase effects when chasing after you. In terms of UI, an inventory system where the user can store weapons or utensils. Additionally, visual health bars on zombies. We also included food that will spawn in certain areas that will give you health.
+---
 
-Assignment 8:
-Updated level design - Added melee weapon on floor, Updated credit scenes. Added 3 different shaders one for obstacles, weapons/consumables, and other for buildings. Updated zombies to get hit reaction and now lose health from bat. Fixed city colliders. Added a new city. Added zombie hordes to the new city and placed cure. Added map to guide users.
+## Core Gameplay Concept
 
+A scientific failure has caused sunlight to emit dangerous radiation. Exposure increases infection over time, eventually turning survivors into zombies. Players must navigate urban environments strategically, using shadows, buildings, and limited resources to survive long enough to reach the cure.
 
-Assignment 9:
-Updated level design - Added visuals for when getting hit for zombies and sound effects, added visuals when in sun that increases infection level, added more NPC that tell a story, added guns and more consumables in buildings, updated changes to player camera and settings/control screen. Modified zombies to be able to get close enough to get hit. 
+---
+
+## Gameplay Mechanics
+
+### Infection System
+- Exposure to sunlight increases infection over time  
+- Staying in shadows slows or halts infection  
+- Full infection results in player death  
+
+### Zombies and AI
+- AI-driven zombies using finite state machines and A* pathfinding  
+- Patrol, chase, and attack behaviors  
+- Noise and proximity can attract additional zombies  
+
+### Combat and Resources
+- Melee and ranged weapons  
+- Limited ammunition and consumables  
+- Food restores stamina  
+- Infection stabilizers slow infection progression  
+
+### Environment and Navigation
+- Urban city layout with multiple routes  
+- Buildings provide shade and interior loot areas  
+- Fog and lighting enhance atmosphere and visibility constraints  
+- World boundaries prevent out-of-bounds traversal  
+
+---
+
+## Objective
+
+- Survive zombie encounters  
+- Minimize sunlight exposure  
+- Explore the city to locate the cure  
+- Reach the final objective before infection becomes fatal  
+
+---
+
+## Controls (Default)
+
+| Action            | Key        |
+|-------------------|------------|
+| Move              | WASD       |
+| Run               | Shift      |
+| Interact          | E          |
+| Switch Items      | 1–6        |
+| Open Map          | M          |
+| Pause / Menu      | Esc        |
+
+---
+
+## Implemented Features
+
+- Sunlight-based infection system  
+- Zombie AI with patrol and chase behavior  
+- NPCs with contextual dialogue and guidance  
+- Inventory hotbar with visual feedback  
+- Animated player and zombie characters  
+- Audio cues for danger, pursuit, and interaction  
+- In-game map for navigation  
+- Multiple city sections with escalating difficulty  
+
+---
+
+## Development Team
+
+- **Hieu Cao** – Project Manager  
+- **Alejandro Bravo** – Programmer  
+- **Atharv Kokate** – Tech Lead / Designer  
+
+---
+
+## Development Notes
+
+- Initially designed as a multiplayer co-op experience  
+- Refactored into a single-player game due to multiplayer complexity and balancing challenges  
+- Iterative development informed by alpha and beta playtesting feedback  
+- Strong emphasis on visual cues, animation quality, and environmental storytelling  
+
+---
+
+## Known Limitations and Future Work
+
+- Improved UI clarity and player guidance  
+- Additional zombie types with unique behaviors  
+- Expanded level variety (e.g., underground environments)  
+- Enhanced visual and audio feedback for infection and damage states  
+
+---
+
+## How to Run the Project
+
+Download the .zip file --> Execute the .exe game file
+
+OR
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Hqcao1/Into-The-Shadows.git
+   ```
+2. Open the project in Unity Hub
+
+3. Use the Unity version specified during development
+
+4. Load the main scene and press Play
